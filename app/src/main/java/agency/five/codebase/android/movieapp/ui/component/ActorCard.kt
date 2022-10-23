@@ -18,21 +18,21 @@ import coil.compose.AsyncImage
 data class ActorCardViewState(
     val imageUrl: String?,
     val name: String,
-    val character: String,
+    val character: String
 )
 
 @Composable
 fun ActorCard(
     actorCardViewState: ActorCardViewState,
-    modifier: Modifier = Modifier,
+    modifier: Modifier = Modifier
 ) {
     Card(
         modifier = modifier
+            .padding(5.dp)
             .height(220.dp)
-            .width(145.dp)
-            .padding(5.dp),
+            .width(145.dp),
         shape = RoundedCornerShape(15.dp),
-        elevation = 5.dp,
+        elevation = 5.dp
     ) {
         Column {
             AsyncImage(
