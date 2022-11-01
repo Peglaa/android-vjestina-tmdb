@@ -1,7 +1,6 @@
 package agency.five.codebase.android.movieapp.ui.component
 
 import agency.five.codebase.android.movieapp.mock.MoviesMock
-import agency.five.codebase.android.movieapp.model.Movie
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -13,34 +12,55 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 
+fun onMovieCardClick() {
+    //
+}
+
+data class MovieCardViewState(
+    val imageUrl: String?,
+    val title: String
+)
+
 @Composable
 fun MovieCard(
-    modifier: Modifier = Modifier,
-    movie: Movie
-){
+    modifier: Modifier,
+    movieCardViewState: MovieCardViewState,
+    onClick: () -> Unit
+) {
     Card(
-        modifier = modifier
-            .padding(5.dp)
-            .width(120.dp)
-            .height(180.dp)
-            .clickable {  },
+        modifier = modifier.clickable { onClick() },
         shape = RoundedCornerShape(15.dp),
         elevation = 5.dp
     ) {
-        Box{
+        Box {
             AsyncImage(
-                model = movie.imageUrl,
-                contentDescription = movie.title,
+                model = movieCardViewState.imageUrl,
+                contentDescription = movieCardViewState.title,
                 contentScale = ContentScale.Crop
             )
-            FavoriteButton()
+            FavoriteButton(
+                modifier = Modifier
+                    .padding(10.dp)
+                    .size(28.dp),
+                isFavorite = true,
+                onClick = {})
         }
     }
 }
 
 @Preview(showBackground = true)
 @Composable
-fun MovieCardPreview(){
+fun MovieCardPreview() {
     val movie = MoviesMock.getMoviesList()[0]
-    MovieCard(movie = movie)
+    val movieCardViewState = MovieCardViewState(imageUrl = movie.imageUrl, title = movie.title)
+
+    val movieCardModifier = Modifier
+        .padding(5.dp)
+        .width(120.dp)
+        .height(180.dp)
+
+    MovieCard(
+        movieCardViewState = movieCardViewState,
+        modifier = movieCardModifier,
+        onClick = { onMovieCardClick() })
 }

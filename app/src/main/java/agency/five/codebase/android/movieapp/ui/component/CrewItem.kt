@@ -4,6 +4,7 @@ import agency.five.codebase.android.movieapp.mock.MoviesMock
 import androidx.compose.foundation.layout.Column
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.sp
@@ -16,8 +17,11 @@ data class CrewItemViewState(
 @Composable
 fun CrewItem(
     crewItemViewState: CrewItemViewState,
-){
-    Column() {
+    modifier: Modifier
+) {
+    Column(
+        modifier = modifier
+    ) {
         Text(
             text = crewItemViewState.name,
             fontWeight = FontWeight.Bold,
@@ -35,5 +39,5 @@ fun CrewItem(
 private fun CrewItemPreview() {
     val crewman = MoviesMock.getCrewman()
     val crewItemViewState = CrewItemViewState(name = crewman.name, job = crewman.job)
-    CrewItem(crewItemViewState = crewItemViewState)
+    CrewItem(crewItemViewState = crewItemViewState, modifier = Modifier)
 }

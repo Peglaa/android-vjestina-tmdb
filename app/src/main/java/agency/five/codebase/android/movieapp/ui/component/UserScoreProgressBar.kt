@@ -20,35 +20,39 @@ import androidx.compose.ui.unit.sp
 import agency.five.codebase.android.movieapp.ui.theme.GreenProgressBar
 import agency.five.codebase.android.movieapp.ui.theme.GreenProgressBarBackground
 
+private const val SCORE_FORMAT = "%.1f"
+
 @Composable
 fun CircularProgressBar(
-    modifier: Modifier = Modifier,
+    modifier: Modifier,
     score: Float,
     radius: Dp = 30.dp,
     colorProgressBar: Color = GreenProgressBar,
     colorProgressBarBackground: Color = GreenProgressBarBackground,
     strokeWidth: Dp = 5.dp,
     animDuration: Int = 1000
-){
+) {
     val animationPlayed = remember { mutableStateOf(false) }
     val currentPercentage = animateFloatAsState(
-        targetValue = (if(animationPlayed.value) score else 0f),
+        targetValue = (if (animationPlayed.value) score else 0f),
         animationSpec = tween(
             durationMillis = animDuration
         )
     )
 
-    LaunchedEffect(key1 = true){
+    LaunchedEffect(key1 = true) {
         animationPlayed.value = true
     }
 
     Box(
         contentAlignment = Alignment.Center,
         modifier = modifier.size(radius * 2f)
-    ){
-        Canvas(modifier = modifier
-            .padding(5.dp)
-            .size(radius * 2f)){
+    ) {
+        Canvas(
+            modifier = Modifier
+                .padding(5.dp)
+                .size(radius * 2f)
+        ) {
             drawArc(
                 color = colorProgressBarBackground,
                 startAngle = -90f,
@@ -64,9 +68,9 @@ fun CircularProgressBar(
                 style = Stroke(strokeWidth.toPx(), cap = StrokeCap.Round)
             )
         }
-        
+
         Text(
-            text = (score * 10f).toString(), //THIS BREAKS WHEN USING DOUBLE FOR SCORE(e.g. 0.01, 0.05 etc)
+            text = SCORE_FORMAT.format(score * 10f), //THIS BREAKS WHEN USING DOUBLE FOR SCORE(e.g. 0.01, 0.05 etc)
             fontSize = 15.sp,
             color = Color.Black
         )
@@ -75,6 +79,6 @@ fun CircularProgressBar(
 
 @Preview(showBackground = true)
 @Composable
-fun CircularProgressBarPreview(){
-    CircularProgressBar(score = 0.8f)
+fun CircularProgressBarPreview() {
+    CircularProgressBar(score = 0.08f, modifier = Modifier)
 }

@@ -24,13 +24,10 @@ data class ActorCardViewState(
 @Composable
 fun ActorCard(
     actorCardViewState: ActorCardViewState,
-    modifier: Modifier = Modifier
+    modifier: Modifier
 ) {
     Card(
-        modifier = modifier
-            .padding(5.dp)
-            .height(220.dp)
-            .width(145.dp),
+        modifier = modifier,
         shape = RoundedCornerShape(15.dp),
         elevation = 5.dp
     ) {
@@ -38,15 +35,14 @@ fun ActorCard(
             AsyncImage(
                 model = actorCardViewState.imageUrl,
                 contentDescription = actorCardViewState.name,
-                modifier = modifier
-                    .height(135.dp),
+                modifier = Modifier
+                    .weight(0.6F),
                 contentScale = ContentScale.Crop
             )
 
             Text(
-                modifier = modifier
-                    .padding(start = 10.dp, top = 5.dp)
-                    .width(100.dp),
+                modifier = Modifier
+                    .padding(start = 10.dp, top = 5.dp, end = 40.dp),
                 text = actorCardViewState.name,
                 fontSize = 14.sp,
                 color = Color.Black,
@@ -54,12 +50,12 @@ fun ActorCard(
             )
 
             Text(
-                modifier = modifier
-                    .padding(start = 10.dp, top = 5.dp),
+                modifier = Modifier
+                    .padding(start = 10.dp, top = 5.dp, end = 5.dp, bottom = 5.dp),
                 text = actorCardViewState.character,
                 fontSize = 12.sp,
                 color = Color.Gray
-                )
+            )
         }
     }
 }
@@ -74,5 +70,10 @@ private fun ActorCardPreview() {
         character = actor.character
     )
 
-    ActorCard(actorCardViewState = actorCardViewState)
+    val actorCardModifier = Modifier
+        .height(220.dp)
+        .width(145.dp)
+        .padding(5.dp)
+
+    ActorCard(actorCardViewState = actorCardViewState, modifier = actorCardModifier)
 }
