@@ -70,7 +70,7 @@ fun CircularProgressBar(
         }
 
         Text(
-            text = SCORE_FORMAT.format(score * 10f), //THIS BREAKS WHEN USING DOUBLE FOR SCORE(e.g. 0.01, 0.05 etc)
+            text = SCORE_FORMAT.format(score * 10f),
             fontSize = 15.sp,
             color = Color.Black
         )

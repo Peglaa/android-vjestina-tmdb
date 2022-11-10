@@ -16,6 +16,10 @@ fun onMovieCardClick() {
     //
 }
 
+fun onFavoriteButtonClicked() {
+    //
+}
+
 data class MovieCardViewState(
     val imageUrl: String?,
     val title: String
@@ -25,6 +29,7 @@ data class MovieCardViewState(
 fun MovieCard(
     modifier: Modifier,
     movieCardViewState: MovieCardViewState,
+    onFavoriteButtonClicked: () -> Unit,
     onClick: () -> Unit
 ) {
     Card(
@@ -43,7 +48,7 @@ fun MovieCard(
                     .padding(10.dp)
                     .size(28.dp),
                 isFavorite = true,
-                onClick = {})
+                onClick = { onFavoriteButtonClicked() })
         }
     }
 }
@@ -62,5 +67,7 @@ fun MovieCardPreview() {
     MovieCard(
         movieCardViewState = movieCardViewState,
         modifier = movieCardModifier,
-        onClick = { onMovieCardClick() })
+        onClick = { onMovieCardClick() },
+        onFavoriteButtonClicked = { onFavoriteButtonClicked() }
+    )
 }
