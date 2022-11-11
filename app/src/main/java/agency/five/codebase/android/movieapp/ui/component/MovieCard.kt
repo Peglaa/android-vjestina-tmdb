@@ -22,7 +22,8 @@ fun onFavoriteButtonClicked() {
 
 data class MovieCardViewState(
     val imageUrl: String?,
-    val title: String
+    val title: String,
+    val isFavorite: Boolean
 )
 
 @Composable
@@ -47,7 +48,7 @@ fun MovieCard(
                 modifier = Modifier
                     .padding(10.dp)
                     .size(28.dp),
-                isFavorite = true,
+                isFavorite = movieCardViewState.isFavorite,
                 onClick = { onFavoriteButtonClicked() })
         }
     }
@@ -57,7 +58,7 @@ fun MovieCard(
 @Composable
 fun MovieCardPreview() {
     val movie = MoviesMock.getMoviesList()[0]
-    val movieCardViewState = MovieCardViewState(imageUrl = movie.imageUrl, title = movie.title)
+    val movieCardViewState = MovieCardViewState(imageUrl = movie.imageUrl, title = movie.title, movie.isFavorite)
 
     val movieCardModifier = Modifier
         .padding(5.dp)
