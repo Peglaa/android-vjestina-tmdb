@@ -2,6 +2,8 @@ package agency.five.codebase.android.movieapp.ui.moviedetails
 
 import agency.five.codebase.android.movieapp.R
 import agency.five.codebase.android.movieapp.mock.MoviesMock
+import agency.five.codebase.android.movieapp.ui.component.CrewItem
+import agency.five.codebase.android.movieapp.ui.component.CrewItemViewState
 import agency.five.codebase.android.movieapp.ui.component.FavoriteButton
 import agency.five.codebase.android.movieapp.ui.component.UserScoreProgressBar
 import agency.five.codebase.android.movieapp.ui.moviedetails.mapper.MovieDetailsMapper
@@ -9,6 +11,9 @@ import agency.five.codebase.android.movieapp.ui.moviedetails.mapper.MovieDetails
 import androidx.compose.foundation.gestures.Orientation
 import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -50,7 +55,12 @@ fun MovieDetailsScreen(
         )
 
         Overview(
-            modifier = Modifier,
+            modifier = Modifier.padding(20.dp),
+            movieDetailsViewState = movieDetailsViewState
+        )
+
+        CrewGrid(
+            modifier = Modifier.padding(20.dp),
             movieDetailsViewState = movieDetailsViewState
         )
 
@@ -126,26 +136,44 @@ fun Overview(
 ) {
     Column(modifier = modifier) {
         Text(
-            modifier = Modifier.padding(
-                start = 20.dp,
-                bottom = 5.dp,
-                top = 20.dp
-            ),
+            modifier = Modifier,
             text = stringResource(id = R.string.overview),
             fontSize = 20.sp,
             fontWeight = FontWeight.Bold,
             color = Color.Black
         )
         Text(
-            modifier = Modifier.padding(
-                start = 20.dp,
-                end = 20.dp
-            ),
+            modifier = Modifier,
             text = movieDetailsViewState.overview,
             fontSize = 15.sp,
             color = Color.Black
         )
     }
+}
+
+@Composable
+fun CrewGrid(
+    modifier: Modifier,
+    movieDetailsViewState: MovieDetailsViewState
+) {
+    LazyVerticalGrid(
+        modifier = modifier,
+        columns = GridCells.Fixed(3),
+        verticalArrangement = Arrangement.spacedBy(20.dp),
+        content = {
+            items(
+                items = movieDetailsViewState.crew,
+                key = { crew -> crew.id }) { crewItem ->
+                CrewItem(
+                    crewItemViewState = CrewItemViewState(
+                        crewItem.name,
+                        crewItem.job
+                    ),
+                    modifier = Modifier
+                )
+            }
+        }
+    )
 }
 
 @Preview
