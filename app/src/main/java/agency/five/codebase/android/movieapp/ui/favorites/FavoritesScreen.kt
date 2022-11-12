@@ -32,6 +32,7 @@ fun favoritesRoute(
 }
  */
 
+//Extension function for scrollable header cause it's a cleaner approach(to me)?
 fun LazyGridScope.header(
     content: @Composable LazyGridItemScope.() -> Unit
 ) {
