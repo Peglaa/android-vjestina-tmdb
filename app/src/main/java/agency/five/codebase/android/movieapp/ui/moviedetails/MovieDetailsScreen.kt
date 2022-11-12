@@ -2,16 +2,15 @@ package agency.five.codebase.android.movieapp.ui.moviedetails
 
 import agency.five.codebase.android.movieapp.R
 import agency.five.codebase.android.movieapp.mock.MoviesMock
-import agency.five.codebase.android.movieapp.ui.component.CrewItem
-import agency.five.codebase.android.movieapp.ui.component.CrewItemViewState
-import agency.five.codebase.android.movieapp.ui.component.FavoriteButton
-import agency.five.codebase.android.movieapp.ui.component.UserScoreProgressBar
+import agency.five.codebase.android.movieapp.ui.component.*
 import agency.five.codebase.android.movieapp.ui.moviedetails.mapper.MovieDetailsMapper
 import agency.five.codebase.android.movieapp.ui.moviedetails.mapper.MovieDetailsMapperImpl
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Text
@@ -36,7 +35,6 @@ private val movieDetailsViewState: MovieDetailsViewState =
 
 @Composable
 fun MovieDetailsScreen(
-    modifier: Modifier,
     movieDetailsViewState: MovieDetailsViewState
 ) {
     Column(
@@ -53,18 +51,25 @@ fun MovieDetailsScreen(
 
         Overview(
             modifier = Modifier
-                .padding(20.dp)
-                .height(600.dp),
+                .padding(20.dp),
             movieDetailsViewState = movieDetailsViewState
         )
 
+        /*THIS IS A LAZY VERTICAL GRID WITH MAX HEIGHT MODIFIER AND DISABLED SCROLLING SO I CAN AVOID NESTED SCROLLING WITH THE COLUMN(SCREEN)
+        * IS THIS A HACKFIX? (SEEMS LIKE IT IS AND THERE IS A CLEANER SOLUTION)*/
         CrewGrid(
-            modifier = Modifier.padding(
-                start = 20.dp,
-                end = 20.dp,
-                bottom = 20.dp
-            )
+            modifier = Modifier
+                .padding(
+                    start = 20.dp,
+                    end = 20.dp,
+                    bottom = 20.dp
+                )
                 .heightIn(min = 100.dp, max = 500.dp),
+            movieDetailsViewState = movieDetailsViewState
+        )
+
+        TopBilledCast(
+            modifier = Modifier.padding(20.dp),
             movieDetailsViewState = movieDetailsViewState
         )
 
@@ -164,6 +169,7 @@ fun CrewGrid(
         modifier = modifier,
         columns = GridCells.Fixed(3),
         verticalArrangement = Arrangement.spacedBy(20.dp),
+        userScrollEnabled = false,
         content = {
             items(
                 items = movieDetailsViewState.crew,
@@ -180,11 +186,55 @@ fun CrewGrid(
     )
 }
 
+@Composable
+fun TopBilledCast(
+    modifier: Modifier,
+    movieDetailsViewState: MovieDetailsViewState
+) {
+    Text(
+        modifier = Modifier
+            .padding(
+                start = 20.dp,
+                end = 20.dp,
+                bottom = 20.dp
+            ),
+        text = stringResource(id = R.string.top_billed_cast),
+        fontSize = 20.sp,
+        fontWeight = FontWeight.Bold,
+        color = Color.Black
+    )
+
+    LazyRow(
+        horizontalArrangement = Arrangement.spacedBy(10.dp),
+        modifier = Modifier
+            .padding(
+                start = 20.dp,
+                end = 20.dp,
+                bottom = 20.dp
+            ),
+        content = {
+            items(
+                items = movieDetailsViewState.cast,
+                key = { cast -> cast.id }) { castItem ->
+                ActorCard(
+                    actorCardViewState = ActorCardViewState(
+                        imageUrl = castItem.imageUrl,
+                        name = castItem.name,
+                        character = castItem.character
+                    ),
+                    modifier = Modifier
+                        .height(220.dp)
+                        .width(145.dp)
+                        .padding(5.dp)
+                )
+            }
+        })
+}
+
 @Preview
 @Composable
 fun MovieDetailsScreenPreview() {
     MovieDetailsScreen(
-        modifier = Modifier,
         movieDetailsViewState = movieDetailsViewState
     )
 }
