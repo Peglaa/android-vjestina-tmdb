@@ -6,7 +6,10 @@ import agency.five.codebase.android.movieapp.ui.component.FavoriteButton
 import agency.five.codebase.android.movieapp.ui.component.UserScoreProgressBar
 import agency.five.codebase.android.movieapp.ui.moviedetails.mapper.MovieDetailsMapper
 import agency.five.codebase.android.movieapp.ui.moviedetails.mapper.MovieDetailsMapperImpl
+import androidx.compose.foundation.gestures.Orientation
+import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -28,12 +31,40 @@ private val movieDetailsViewState: MovieDetailsViewState =
     )
 
 @Composable
+fun MovieDetailsScreen(
+    modifier: Modifier,
+    movieDetailsViewState: MovieDetailsViewState
+) {
+    val scrollState = rememberScrollState()
+
+    Column(
+        modifier = Modifier.scrollable(
+            state = scrollState,
+            orientation = Orientation.Vertical
+        )
+    ) {
+
+        ImageHeader(
+            modifier = Modifier.height(350.dp),
+            movieDetailsViewState = movieDetailsViewState
+        )
+
+        Overview(
+            modifier = Modifier,
+            movieDetailsViewState = movieDetailsViewState
+        )
+
+    }
+
+}
+
+@Composable
 fun ImageHeader(
     modifier: Modifier,
     movieDetailsViewState: MovieDetailsViewState
 ) {
     Box(
-        modifier = modifier.fillMaxHeight(0.45F),
+        modifier = modifier,
     ) {
         AsyncImage(
             model = movieDetailsViewState.imageUrl,
@@ -58,7 +89,7 @@ fun ImageHeader(
                     score = movieDetailsViewState.voteAverage
                 )
                 Text(
-                    modifier = Modifier.padding(10.dp),
+                    modifier = Modifier,
                     text = stringResource(id = R.string.user_score),
                     color = Color.White,
                     fontWeight = FontWeight.Bold
@@ -88,11 +119,40 @@ fun ImageHeader(
     }
 }
 
+@Composable
+fun Overview(
+    modifier: Modifier,
+    movieDetailsViewState: MovieDetailsViewState
+) {
+    Column(modifier = modifier) {
+        Text(
+            modifier = Modifier.padding(
+                start = 20.dp,
+                bottom = 5.dp,
+                top = 20.dp
+            ),
+            text = stringResource(id = R.string.overview),
+            fontSize = 20.sp,
+            fontWeight = FontWeight.Bold,
+            color = Color.Black
+        )
+        Text(
+            modifier = Modifier.padding(
+                start = 20.dp,
+                end = 20.dp
+            ),
+            text = movieDetailsViewState.overview,
+            fontSize = 15.sp,
+            color = Color.Black
+        )
+    }
+}
+
 @Preview
 @Composable
 fun MovieDetailsScreenPreview() {
-    ImageHeader(
-        modifier = Modifier.fillMaxWidth(),
+    MovieDetailsScreen(
+        modifier = Modifier,
         movieDetailsViewState = movieDetailsViewState
     )
 }
