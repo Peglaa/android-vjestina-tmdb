@@ -8,13 +8,12 @@ import agency.five.codebase.android.movieapp.ui.component.FavoriteButton
 import agency.five.codebase.android.movieapp.ui.component.UserScoreProgressBar
 import agency.five.codebase.android.movieapp.ui.moviedetails.mapper.MovieDetailsMapper
 import agency.five.codebase.android.movieapp.ui.moviedetails.mapper.MovieDetailsMapperImpl
-import androidx.compose.foundation.gestures.Orientation
-import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -40,12 +39,10 @@ fun MovieDetailsScreen(
     modifier: Modifier,
     movieDetailsViewState: MovieDetailsViewState
 ) {
-    val scrollState = rememberScrollState()
-
     Column(
-        modifier = Modifier.scrollable(
-            state = scrollState,
-            orientation = Orientation.Vertical
+        modifier = Modifier.verticalScroll(
+            state = rememberScrollState(),
+            enabled = true
         )
     ) {
 
@@ -55,12 +52,19 @@ fun MovieDetailsScreen(
         )
 
         Overview(
-            modifier = Modifier.padding(20.dp),
+            modifier = Modifier
+                .padding(20.dp)
+                .height(600.dp),
             movieDetailsViewState = movieDetailsViewState
         )
 
         CrewGrid(
-            modifier = Modifier.padding(20.dp),
+            modifier = Modifier.padding(
+                start = 20.dp,
+                end = 20.dp,
+                bottom = 20.dp
+            )
+                .heightIn(min = 100.dp, max = 500.dp),
             movieDetailsViewState = movieDetailsViewState
         )
 
