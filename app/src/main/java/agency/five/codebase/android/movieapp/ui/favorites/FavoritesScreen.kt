@@ -36,7 +36,10 @@ fun favoritesRoute(
 fun LazyGridScope.header(
     content: @Composable LazyGridItemScope.() -> Unit
 ) {
-    item(span = { GridItemSpan(this.maxLineSpan) }, content = content)
+    item(
+        span = { GridItemSpan(this.maxLineSpan) },
+        content = content
+    )
 }
 
 @Composable

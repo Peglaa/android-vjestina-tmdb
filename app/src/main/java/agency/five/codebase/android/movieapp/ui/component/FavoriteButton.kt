@@ -12,7 +12,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 
-fun onImageClick(){
+fun onImageClick() {
 
 }
 
@@ -24,7 +24,9 @@ fun FavoriteButton(
     onClick: () -> Unit,
 ) {
     Image(
-        painter = painterResource(id = if (isFavorite) R.drawable.ic_favorite_selected else R.drawable.ic_favorite),
+        painter = painterResource(
+            id = if (isFavorite) R.drawable.ic_favorite_selected else R.drawable.ic_favorite
+        ),
         contentDescription = stringResource(id = contentDescription),
         modifier = modifier.clickable { onClick() }
     )
@@ -37,5 +39,9 @@ private fun FavoriteButtonPreview() {
         .padding(10.dp)
         .size(28.dp)
 
-    FavoriteButton(modifier = favButtonModifier, onClick = { onImageClick() }, isFavorite = false)
+    FavoriteButton(
+        modifier = favButtonModifier,
+        onClick = { onImageClick() },
+        isFavorite = false
+    )
 }

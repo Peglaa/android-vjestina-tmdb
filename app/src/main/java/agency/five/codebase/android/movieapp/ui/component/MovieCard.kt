@@ -58,7 +58,11 @@ fun MovieCard(
 @Composable
 fun MovieCardPreview() {
     val movie = MoviesMock.getMoviesList()[0]
-    val movieCardViewState = MovieCardViewState(imageUrl = movie.imageUrl, title = movie.title, movie.isFavorite)
+    val movieCardViewState = MovieCardViewState(
+        imageUrl = movie.imageUrl,
+        title = movie.title,
+        isFavorite = movie.isFavorite
+    )
 
     val movieCardModifier = Modifier
         .padding(5.dp)

@@ -42,7 +42,11 @@ fun ActorCard(
 
             Text(
                 modifier = Modifier
-                    .padding(start = 10.dp, top = 5.dp, end = 40.dp),
+                    .padding(
+                        start = 10.dp,
+                        top = 5.dp,
+                        end = 40.dp
+                    ),
                 text = actorCardViewState.name,
                 fontSize = 14.sp,
                 color = Color.Black,
@@ -51,7 +55,12 @@ fun ActorCard(
 
             Text(
                 modifier = Modifier
-                    .padding(start = 10.dp, top = 5.dp, end = 5.dp, bottom = 5.dp),
+                    .padding(
+                        start = 10.dp,
+                        top = 5.dp,
+                        end = 5.dp,
+                        bottom = 5.dp
+                    ),
                 text = actorCardViewState.character,
                 fontSize = 12.sp,
                 color = Color.Gray
@@ -75,5 +84,8 @@ private fun ActorCardPreview() {
         .width(145.dp)
         .padding(5.dp)
 
-    ActorCard(actorCardViewState = actorCardViewState, modifier = actorCardModifier)
+    ActorCard(
+        actorCardViewState = actorCardViewState,
+        modifier = actorCardModifier
+    )
 }

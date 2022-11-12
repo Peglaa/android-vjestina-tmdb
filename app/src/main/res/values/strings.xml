@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">MovieApp</string>
     <string name="fav_button">Favorite button</string>
+    <string name="user_score">User score</string>
 </resources>
