@@ -13,4 +13,8 @@
     <string name="now_playing_tv">TV</string>
     <string name="upcoming_today">Today</string>
     <string name="upcoming_this_week">This Week</string>
+
+    <string name="whats_popular">What\'s popular</string>
+    <string name="now_playing">Now playing</string>
+    <string name="upcoming">Upcoming</string>
 </resources>

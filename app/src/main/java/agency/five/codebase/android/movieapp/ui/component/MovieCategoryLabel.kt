@@ -2,6 +2,7 @@ package agency.five.codebase.android.movieapp.ui.component
 
 import agency.five.codebase.android.movieapp.R
 import androidx.annotation.StringRes
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Divider
 import androidx.compose.material.Text
@@ -28,18 +29,21 @@ data class MovieCategoryLabelViewState(
 @Composable
 fun MovieCategoryLabel(
     movieCategoryLabelViewState: MovieCategoryLabelViewState,
-    modifier: Modifier
+    modifier: Modifier,
+    onClick: () -> Unit
 ) {
     if (movieCategoryLabelViewState.isSelected) {
         SelectedText(
             movieCategoryLabelViewState = movieCategoryLabelViewState,
             modifier = modifier
-                .width(intrinsicSize = IntrinsicSize.Max)
+                .width(intrinsicSize = IntrinsicSize.Max),
+            onClick = onClick
         )
     } else {
         UnselectedText(
             movieCategoryLabelViewState = movieCategoryLabelViewState,
-            modifier = modifier
+            modifier = modifier,
+            onClick = onClick
         )
     }
 }
@@ -47,10 +51,11 @@ fun MovieCategoryLabel(
 @Composable
 fun SelectedText(
     movieCategoryLabelViewState: MovieCategoryLabelViewState,
-    modifier: Modifier
+    modifier: Modifier,
+    onClick: () -> Unit
 ) {
     Column(
-        modifier = modifier
+        modifier = modifier.clickable { onClick() }
     ) {
         Text(
             text = selectTextSource(movieCategoryLabelViewState = movieCategoryLabelViewState),
@@ -67,13 +72,14 @@ fun SelectedText(
 @Composable
 fun UnselectedText(
     movieCategoryLabelViewState: MovieCategoryLabelViewState,
-    modifier: Modifier
+    modifier: Modifier,
+    onClick: () -> Unit
 ) {
     Text(
         text = selectTextSource(movieCategoryLabelViewState = movieCategoryLabelViewState),
         color = Color.Gray,
         fontSize = 16.sp,
-        modifier = modifier
+        modifier = modifier.clickable { onClick() }
     )
 }
 
@@ -94,6 +100,7 @@ fun MovieCategoryLabelPreview() {
     val categoryViewState2 = MovieCategoryLabelViewState(1, true, stringRes)
     MovieCategoryLabel(
         movieCategoryLabelViewState = categoryViewState2,
-        modifier = Modifier.padding(5.dp)
+        modifier = Modifier.padding(5.dp),
+        onClick = {}
     )
 }

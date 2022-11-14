@@ -34,6 +34,7 @@ class HomeScreenMapperImpl : HomeScreenMapper {
         for (movie in movies)
             homeMovieViewStates.add(
                 HomeMovieViewState(
+                    id = movie.id,
                     title = movie.title,
                     imageUrl = movie.imageUrl,
                     isFavorite = movie.isFavorite
