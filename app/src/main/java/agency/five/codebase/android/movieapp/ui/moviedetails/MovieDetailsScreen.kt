@@ -176,6 +176,7 @@ fun CrewGrid(
                 key = { crew -> crew.id }) { crewItem ->
                 CrewItem(
                     crewItemViewState = CrewItemViewState(
+                        id = crewItem.id,
                         crewItem.name,
                         crewItem.job
                     ),
@@ -218,6 +219,7 @@ fun TopBilledCast(
                 key = { cast -> cast.id }) { castItem ->
                 ActorCard(
                     actorCardViewState = ActorCardViewState(
+                        id = castItem.id,
                         imageUrl = castItem.imageUrl,
                         name = castItem.name,
                         character = castItem.character

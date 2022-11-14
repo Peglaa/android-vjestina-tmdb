@@ -10,6 +10,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.sp
 
 data class CrewItemViewState(
+    val id: Int,
     val name: String,
     val job: String
 )
@@ -38,6 +39,6 @@ fun CrewItem(
 @Composable
 private fun CrewItemPreview() {
     val crewman = MoviesMock.getCrewman()
-    val crewItemViewState = CrewItemViewState(name = crewman.name, job = crewman.job)
+    val crewItemViewState = CrewItemViewState(id = crewman.id, name = crewman.name, job = crewman.job)
     CrewItem(crewItemViewState = crewItemViewState, modifier = Modifier)
 }
