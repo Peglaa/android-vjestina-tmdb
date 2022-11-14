@@ -124,42 +124,36 @@ fun MovieCategoryLayout(
             MovieCategoryLabel(
                 movieCategoryLabelViewState = category,
                 modifier = Modifier.padding(5.dp),
-                onClick = {
-                    when (category.itemId) {
-                        0 -> {
-
-                        }
-
-                    }
-                })
-
-            LazyRow(
-                horizontalArrangement = Arrangement.spacedBy(10.dp),
-                modifier = Modifier
-                    .padding(
-                        start = 20.dp,
-                        end = 20.dp,
-                        bottom = 20.dp
-                    ),
-                content = {
-                    items(
-                        items = categoryViewState.movies,
-                        key = { movie -> movie.id }) { movie ->
-                        MovieCard(
-                            modifier = Modifier
-                                .width(120.dp)
-                                .height(180.dp),
-                            movieCardViewState = MovieCardViewState(
-                                imageUrl = movie.imageUrl,
-                                title = movie.title,
-                                isFavorite = movie.isFavorite
-                            ),
-                            onFavoriteButtonClicked = { /*TODO*/ },
-                            onClick = { /*TODO*/ })
-                    }
-                })
+                onClick = { }
+            )
         }
     }
+
+    LazyRow(
+        horizontalArrangement = Arrangement.spacedBy(10.dp),
+        modifier = Modifier
+            .padding(
+                start = 20.dp,
+                end = 20.dp,
+                bottom = 20.dp
+            ),
+        content = {
+            items(
+                items = categoryViewState.movies,
+                key = { movie -> movie.id }) { movie ->
+                MovieCard(
+                    modifier = Modifier
+                        .width(120.dp)
+                        .height(180.dp),
+                    movieCardViewState = MovieCardViewState(
+                        imageUrl = movie.imageUrl,
+                        title = movie.title,
+                        isFavorite = movie.isFavorite
+                    ),
+                    onFavoriteButtonClicked = { /*TODO*/ },
+                    onClick = { /*TODO*/ })
+            }
+        })
 }
 
 @Preview
