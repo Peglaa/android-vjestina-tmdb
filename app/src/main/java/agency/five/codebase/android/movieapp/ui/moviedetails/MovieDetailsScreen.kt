@@ -15,6 +15,9 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -32,6 +35,18 @@ private val movieDetailsViewState: MovieDetailsViewState =
     movieDetailsMapper.toMovieDetailsViewState(
         MoviesMock.getMovieDetails()
     )
+
+@Composable
+fun MovieDetailsRoute(
+
+) {
+    val movieDetailsViewState by remember { mutableStateOf(movieDetailsViewState) }
+// ...
+    MovieDetailsScreen(
+        movieDetailsViewState = movieDetailsViewState
+// other states and actions
+    )
+}
 
 @Composable
 fun MovieDetailsScreen(
@@ -69,7 +84,12 @@ fun MovieDetailsScreen(
         )
 
         TopBilledCast(
-            modifier = Modifier.padding(20.dp),
+            modifier = Modifier
+                .padding(
+                    start = 20.dp,
+                    end = 20.dp,
+                    bottom = 20.dp
+                ),
             movieDetailsViewState = movieDetailsViewState
         )
 
@@ -193,12 +213,7 @@ fun TopBilledCast(
     movieDetailsViewState: MovieDetailsViewState
 ) {
     Text(
-        modifier = Modifier
-            .padding(
-                start = 20.dp,
-                end = 20.dp,
-                bottom = 20.dp
-            ),
+        modifier = modifier,
         text = stringResource(id = R.string.top_billed_cast),
         fontSize = 20.sp,
         fontWeight = FontWeight.Bold,

@@ -17,4 +17,9 @@
     <string name="whats_popular">What\'s popular</string>
     <string name="now_playing">Now playing</string>
     <string name="upcoming">Upcoming</string>
+
+    <string name="home">Home</string>
+    <string name="favorites">Favorites</string>
+    <string name="back_button">Back button</string>
+    <string name="tmdb_logo">TMDB Logo</string>
 </resources>

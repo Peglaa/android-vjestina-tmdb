@@ -13,6 +13,9 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
@@ -59,11 +62,30 @@ val upcomingCategoryViewState = homeScreenMapper.toHomeMovieCategoryViewState(
 )
 
 @Composable
+fun HomeRoute(
+    onNavigateToMovieDetails: () -> Unit,
+    onFavoriteButtonClicked: () -> Unit
+) {
+    val popularCategoryViewState by remember { mutableStateOf(popularCategoryViewState) }
+    val nowPlayingCategoryViewState by remember { mutableStateOf(nowPlayingCategoryViewState) }
+    val upcomingCategoryViewState by remember { mutableStateOf(upcomingCategoryViewState) }
+// ...
+    HomeScreen(
+        popularCategoryViewState = popularCategoryViewState,
+        nowPlayingCategoryViewState = nowPlayingCategoryViewState,
+        upcomingCategoryViewState = upcomingCategoryViewState,
+        onNavigateToMovieDetails = { onNavigateToMovieDetails() },
+        onFavoriteButtonClicked = { onFavoriteButtonClicked() }
+    )
+}
+
+@Composable
 fun HomeScreen(
-    modifier: Modifier,
     popularCategoryViewState: HomeMovieCategoryViewState,
     nowPlayingCategoryViewState: HomeMovieCategoryViewState,
-    upcomingCategoryViewState: HomeMovieCategoryViewState
+    upcomingCategoryViewState: HomeMovieCategoryViewState,
+    onNavigateToMovieDetails: () -> Unit,
+    onFavoriteButtonClicked: () -> Unit
 ) {
     Column(
         modifier = Modifier
@@ -76,19 +98,25 @@ fun HomeScreen(
         MovieCategoryLayout(
             modifier = Modifier,
             categoryViewState = popularCategoryViewState,
-            title = R.string.whats_popular
+            title = R.string.whats_popular,
+            onNavigateToMovieDetails = { onNavigateToMovieDetails() },
+            onFavoriteButtonClicked = { onFavoriteButtonClicked() }
         )
 
         MovieCategoryLayout(
             modifier = Modifier,
             categoryViewState = nowPlayingCategoryViewState,
-            title = R.string.now_playing
+            title = R.string.now_playing,
+            onNavigateToMovieDetails = { onNavigateToMovieDetails() },
+            onFavoriteButtonClicked = { onFavoriteButtonClicked() }
         )
 
         MovieCategoryLayout(
             modifier = Modifier,
             categoryViewState = upcomingCategoryViewState,
-            title = R.string.upcoming
+            title = R.string.upcoming,
+            onNavigateToMovieDetails = { onNavigateToMovieDetails() },
+            onFavoriteButtonClicked = { onFavoriteButtonClicked() }
         )
     }
 
@@ -98,7 +126,9 @@ fun HomeScreen(
 fun MovieCategoryLayout(
     modifier: Modifier,
     categoryViewState: HomeMovieCategoryViewState,
-    title: Int
+    title: Int,
+    onNavigateToMovieDetails: () -> Unit,
+    onFavoriteButtonClicked: () -> Unit
 ) {
     Text(
         modifier = Modifier
@@ -124,7 +154,7 @@ fun MovieCategoryLayout(
             MovieCategoryLabel(
                 movieCategoryLabelViewState = category,
                 modifier = Modifier.padding(5.dp),
-                onClick = { }
+                onClick = { /* TODO */ }
             )
         }
     }
@@ -150,8 +180,9 @@ fun MovieCategoryLayout(
                         title = movie.title,
                         isFavorite = movie.isFavorite
                     ),
-                    onFavoriteButtonClicked = { /*TODO*/ },
-                    onClick = { /*TODO*/ })
+                    onFavoriteButtonClicked = { onFavoriteButtonClicked() },
+                    onClick =  { onNavigateToMovieDetails() }
+                )
             }
         })
 }
@@ -160,9 +191,10 @@ fun MovieCategoryLayout(
 @Composable
 fun HomeScreenPreview() {
     HomeScreen(
-        modifier = Modifier,
         popularCategoryViewState = popularCategoryViewState,
         nowPlayingCategoryViewState = nowPlayingCategoryViewState,
-        upcomingCategoryViewState = upcomingCategoryViewState
+        upcomingCategoryViewState = upcomingCategoryViewState,
+        onFavoriteButtonClicked = {  },
+        onNavigateToMovieDetails = {  }
     )
 }

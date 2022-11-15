@@ -9,6 +9,9 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.*
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -18,19 +21,24 @@ private val favoritesMapper: FavoritesMapper = FavoritesMapperImpl()
 
 // multiple view states if required
 val favoritesViewState = favoritesMapper.toFavoritesViewState(MoviesMock.getMoviesList())
-/*
+
 @Composable
-fun favoritesRoute(
-// actions
+fun FavoritesRoute(
+    onNavigateToMovieDetails: () -> Unit,
+
 ) {
-    val z by remember { mutableStateOf(favoritesViewState) }
-// ...
+    val favoritesViewState by remember { mutableStateOf(favoritesViewState) }
+
     FavoritesScreen(
-        z,
-// other states and actions
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(15.dp),
+        favoritesViewState = favoritesViewState,
+        onCardClick = { onNavigateToMovieDetails() },
+        onFavoriteButtonClick = {  }
     )
 }
- */
+
 
 //Extension function for scrollable header cause it's a cleaner approach(to me)?
 fun LazyGridScope.header(
@@ -45,7 +53,9 @@ fun LazyGridScope.header(
 @Composable
 fun FavoritesScreen(
     modifier: Modifier,
-    favoritesViewState: FavoritesViewState
+    favoritesViewState: FavoritesViewState,
+    onCardClick: () -> Unit,
+    onFavoriteButtonClick: () -> Unit
 ) {
 
     LazyVerticalGrid(
@@ -68,8 +78,8 @@ fun FavoritesScreen(
                         .width(120.dp)
                         .height(180.dp),
                     movieCardViewState = card.movieCardViewState,
-                    onClick = {},
-                    onFavoriteButtonClicked = {}
+                    onClick = { onCardClick() },
+                    onFavoriteButtonClicked = { onFavoriteButtonClick() }
                 )
             }
         },
@@ -87,7 +97,9 @@ fun FavoritesScreenPreview() {
     MovieAppTheme {
         FavoritesScreen(
             modifier = favoritesScreenModifier,
-            favoritesViewState = favoritesViewState
+            favoritesViewState = favoritesViewState,
+            onCardClick = {  },
+            onFavoriteButtonClick = {  }
         )
     }
 }
