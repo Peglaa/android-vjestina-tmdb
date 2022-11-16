@@ -41,10 +41,9 @@ fun MovieDetailsRoute(
 
 ) {
     val movieDetailsViewState by remember { mutableStateOf(movieDetailsViewState) }
-// ...
+
     MovieDetailsScreen(
         movieDetailsViewState = movieDetailsViewState
-// other states and actions
     )
 }
 

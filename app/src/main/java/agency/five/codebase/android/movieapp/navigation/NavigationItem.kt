@@ -28,8 +28,8 @@ sealed class NavigationItem(
         unselectedIconId = R.drawable.ic_favorite_outlined,
         labelId = R.string.favorites,
     )
-}
 
-object MovieDetailsDestination : MovieAppDestination(MOVIE_DETAILS_ROUTE_WITH_PARAMS) {
-    fun createNavigationRoute(movieId: Int): String = "$MOVIE_DETAILS_ROUTE/$movieId"
+    object MovieDetailsDestination : MovieAppDestination(MOVIE_DETAILS_ROUTE_WITH_PARAMS) {
+        fun createNavigationRoute(movieId: Int): String = "$MOVIE_DETAILS_ROUTE/$movieId"
+    }
 }

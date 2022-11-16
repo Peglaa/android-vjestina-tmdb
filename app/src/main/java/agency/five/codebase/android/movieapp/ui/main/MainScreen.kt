@@ -2,7 +2,6 @@ package agency.five.codebase.android.movieapp.ui.main
 
 import agency.five.codebase.android.movieapp.R
 import agency.five.codebase.android.movieapp.navigation.MOVIE_ID_KEY
-import agency.five.codebase.android.movieapp.navigation.MovieDetailsDestination
 import agency.five.codebase.android.movieapp.navigation.NavigationItem
 import agency.five.codebase.android.movieapp.ui.favorites.FavoritesRoute
 import agency.five.codebase.android.movieapp.ui.home.HomeRoute
@@ -23,7 +22,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavDestination
-import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -59,7 +57,7 @@ fun MainScreen() {
                     ),
                     onNavigateToDestination = {
                         navController.navigate(it.route) {
-                            popUpTo(it.route){
+                            popUpTo(it.route) {
                                 inclusive = true
                             }
                         }
@@ -81,7 +79,7 @@ fun MainScreen() {
                     HomeRoute(
                         onNavigateToMovieDetails = {
                             navController.navigate(
-                                MovieDetailsDestination.createNavigationRoute(1)
+                                NavigationItem.MovieDetailsDestination.createNavigationRoute(it)
                             )
                             showBottomBar = !showBottomBar
                         },
@@ -92,14 +90,14 @@ fun MainScreen() {
                     FavoritesRoute(
                         onNavigateToMovieDetails = {
                             navController.navigate(
-                                MovieDetailsDestination.createNavigationRoute(1)
+                                NavigationItem.MovieDetailsDestination.createNavigationRoute(it)
                             )
                             showBottomBar = !showBottomBar
                         }
                     )
                 }
                 composable(
-                    route = MovieDetailsDestination.route,
+                    route = NavigationItem.MovieDetailsDestination.route,
                     arguments = listOf(navArgument(MOVIE_ID_KEY) { type = NavType.IntType }),
                 ) {
                     MovieDetailsRoute()
@@ -201,9 +199,7 @@ fun RowScope.AddItem(
                 modifier = Modifier.fillMaxHeight(0.25F),
                 painter = painterResource(
                     id =
-                    if (currentDestination?.hierarchy?.any {
-                            it.route == destination.route
-                        } == true)
+                    if (currentDestination?.route == destination.route)
                         destination.selectedIconId
                     else
                         destination.unselectedIconId

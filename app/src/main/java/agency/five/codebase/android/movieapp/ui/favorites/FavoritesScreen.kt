@@ -24,7 +24,7 @@ val favoritesViewState = favoritesMapper.toFavoritesViewState(MoviesMock.getMovi
 
 @Composable
 fun FavoritesRoute(
-    onNavigateToMovieDetails: () -> Unit,
+    onNavigateToMovieDetails: (Int) -> Unit,
 
 ) {
     val favoritesViewState by remember { mutableStateOf(favoritesViewState) }
@@ -34,7 +34,7 @@ fun FavoritesRoute(
             .fillMaxSize()
             .padding(15.dp),
         favoritesViewState = favoritesViewState,
-        onCardClick = { onNavigateToMovieDetails() },
+        onCardClick = onNavigateToMovieDetails,
         onFavoriteButtonClick = {  }
     )
 }
@@ -54,7 +54,7 @@ fun LazyGridScope.header(
 fun FavoritesScreen(
     modifier: Modifier,
     favoritesViewState: FavoritesViewState,
-    onCardClick: () -> Unit,
+    onCardClick: (Int) -> Unit,
     onFavoriteButtonClick: () -> Unit
 ) {
 
@@ -78,7 +78,7 @@ fun FavoritesScreen(
                         .width(120.dp)
                         .height(180.dp),
                     movieCardViewState = card.movieCardViewState,
-                    onClick = { onCardClick() },
+                    onClick = { onCardClick(card.id) },
                     onFavoriteButtonClicked = { onFavoriteButtonClick() }
                 )
             }

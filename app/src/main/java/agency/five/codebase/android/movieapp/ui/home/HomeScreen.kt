@@ -12,10 +12,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
@@ -63,30 +60,25 @@ val upcomingCategoryViewState = homeScreenMapper.toHomeMovieCategoryViewState(
 
 @Composable
 fun HomeRoute(
-    onNavigateToMovieDetails: () -> Unit,
+    onNavigateToMovieDetails: (Int) -> Unit,
     onFavoriteButtonClicked: () -> Unit
 ) {
-    val popularCategoryViewState by remember { mutableStateOf(popularCategoryViewState) }
-    val nowPlayingCategoryViewState by remember { mutableStateOf(nowPlayingCategoryViewState) }
-    val upcomingCategoryViewState by remember { mutableStateOf(upcomingCategoryViewState) }
-// ...
     HomeScreen(
-        popularCategoryViewState = popularCategoryViewState,
-        nowPlayingCategoryViewState = nowPlayingCategoryViewState,
-        upcomingCategoryViewState = upcomingCategoryViewState,
-        onNavigateToMovieDetails = { onNavigateToMovieDetails() },
+        onNavigateToMovieDetails = onNavigateToMovieDetails,
         onFavoriteButtonClicked = { onFavoriteButtonClicked() }
     )
 }
 
 @Composable
 fun HomeScreen(
-    popularCategoryViewState: HomeMovieCategoryViewState,
-    nowPlayingCategoryViewState: HomeMovieCategoryViewState,
-    upcomingCategoryViewState: HomeMovieCategoryViewState,
-    onNavigateToMovieDetails: () -> Unit,
-    onFavoriteButtonClicked: () -> Unit
+    onNavigateToMovieDetails: (Int) -> Unit,
+    onFavoriteButtonClicked: () -> Unit,
 ) {
+    //THESE STATES ARE NOT TRIGGERING RECOMPOSITION FOR SOME REASON?????????????
+    var popularCategoryViewState by remember { mutableStateOf(popularCategoryViewState) }
+    var nowPlayingCategoryViewState by remember { mutableStateOf(nowPlayingCategoryViewState) }
+    var upcomingCategoryViewState by remember { mutableStateOf(upcomingCategoryViewState) }
+
     Column(
         modifier = Modifier
             .verticalScroll(
@@ -99,24 +91,138 @@ fun HomeScreen(
             modifier = Modifier,
             categoryViewState = popularCategoryViewState,
             title = R.string.whats_popular,
-            onNavigateToMovieDetails = { onNavigateToMovieDetails() },
-            onFavoriteButtonClicked = { onFavoriteButtonClicked() }
+            onNavigateToMovieDetails = onNavigateToMovieDetails,
+            onFavoriteButtonClicked = { onFavoriteButtonClicked() },
+            /*
+            I PROBABLY BUTCHERED THIS BUT I TRIED CREATING NEW OBJECTS WITH COPY() TO SEE IF I CAN
+            TRIGGER RECOMPOSITION AND I CANT
+
+            CLICKING ON A LABEL DOES NOT TRIGGER RECOMPOSITION BUT THE CLICK IS REMEMBERED AFTER NAVIGATING,
+            SO IF I CLICK ON A LABEL NOTHING WILL HAPPEN BUT AFTER NAVIGATING AWAY AND THEN BACK TO THE HOME SCREEN
+            THE CLICKED LABEL WILL BE SELECTED PROPERLY......
+            */
+            onCategoryClicked = { categoryId, categoryList ->
+                when (categoryId) {
+                    0 -> {
+                        val newList: MutableList<MovieCategoryLabelViewState> = mutableListOf()
+                        categoryList.forEachIndexed { index, movieCategoryLabelViewState ->
+                            movieCategoryLabelViewState.isSelected = index == 0
+                            newList.add(movieCategoryLabelViewState)
+                        }
+
+                        popularCategoryViewState = popularCategoryViewState.copy(
+                            movieCategories = newList
+                        )
+                    }
+
+                    1 -> {
+                        val newList: MutableList<MovieCategoryLabelViewState> = mutableListOf()
+                        categoryList.forEachIndexed { index, movieCategoryLabelViewState ->
+                            movieCategoryLabelViewState.isSelected = index == 1
+                            newList.add(movieCategoryLabelViewState)
+                        }
+
+                        popularCategoryViewState = popularCategoryViewState.copy(
+                            movieCategories = newList
+                        )
+                    }
+
+                    2 -> {
+                        val newList: MutableList<MovieCategoryLabelViewState> = mutableListOf()
+                        categoryList.forEachIndexed { index, movieCategoryLabelViewState ->
+                            movieCategoryLabelViewState.isSelected = index == 2
+                            newList.add(movieCategoryLabelViewState)
+                        }
+
+                        popularCategoryViewState = popularCategoryViewState.copy(
+                            movieCategories = newList
+                        )
+                    }
+
+                    3 -> {
+                        val newList: MutableList<MovieCategoryLabelViewState> = mutableListOf()
+                        categoryList.forEachIndexed { index, movieCategoryLabelViewState ->
+                            movieCategoryLabelViewState.isSelected = index == 3
+                            newList.add(movieCategoryLabelViewState)
+                        }
+
+                        popularCategoryViewState = popularCategoryViewState.copy(
+                            movieCategories = newList
+                        )
+                    }
+                }
+            }
         )
 
         MovieCategoryLayout(
             modifier = Modifier,
             categoryViewState = nowPlayingCategoryViewState,
             title = R.string.now_playing,
-            onNavigateToMovieDetails = { onNavigateToMovieDetails() },
-            onFavoriteButtonClicked = { onFavoriteButtonClicked() }
+            onNavigateToMovieDetails = onNavigateToMovieDetails,
+            onFavoriteButtonClicked = { onFavoriteButtonClicked() },
+            onCategoryClicked = { categoryId, categoryList ->
+                when (categoryId) {
+                    4 -> {
+                        val newList: MutableList<MovieCategoryLabelViewState> = mutableListOf()
+                        categoryList.forEachIndexed { index, movieCategoryLabelViewState ->
+                            movieCategoryLabelViewState.isSelected = index == 0
+                            newList.add(movieCategoryLabelViewState)
+                        }
+
+                        nowPlayingCategoryViewState = nowPlayingCategoryViewState.copy(
+                            movieCategories = newList
+                        )
+                    }
+
+                    5 -> {
+                        val newList: MutableList<MovieCategoryLabelViewState> = mutableListOf()
+                        categoryList.forEachIndexed { index, movieCategoryLabelViewState ->
+                            movieCategoryLabelViewState.isSelected = index == 1
+                            newList.add(movieCategoryLabelViewState)
+                        }
+
+                        nowPlayingCategoryViewState = nowPlayingCategoryViewState.copy(
+                            movieCategories = newList
+                        )
+                    }
+                }
+            }
         )
 
         MovieCategoryLayout(
             modifier = Modifier,
             categoryViewState = upcomingCategoryViewState,
             title = R.string.upcoming,
-            onNavigateToMovieDetails = { onNavigateToMovieDetails() },
-            onFavoriteButtonClicked = { onFavoriteButtonClicked() }
+            onNavigateToMovieDetails = onNavigateToMovieDetails,
+            onFavoriteButtonClicked = { onFavoriteButtonClicked() },
+            onCategoryClicked = { categoryId, categoryList ->
+                when (categoryId) {
+                    6 -> {
+                        val newList: MutableList<MovieCategoryLabelViewState> = mutableListOf()
+                        categoryList.forEachIndexed { index, movieCategoryLabelViewState ->
+                            movieCategoryLabelViewState.isSelected = index == 0
+                            newList.add(movieCategoryLabelViewState)
+                        }
+
+                        upcomingCategoryViewState = upcomingCategoryViewState.copy(
+                            movieCategories = newList
+                        )
+                    }
+
+                    7 -> {
+                        val newList: MutableList<MovieCategoryLabelViewState> = mutableListOf()
+                        categoryList.forEachIndexed { index, movieCategoryLabelViewState ->
+                            movieCategoryLabelViewState.isSelected = index == 1
+                            newList.add(movieCategoryLabelViewState)
+                        }
+
+                        upcomingCategoryViewState = upcomingCategoryViewState.copy(
+                            movieCategories = newList
+                        )
+                    }
+
+                }
+            }
         )
     }
 
@@ -127,9 +233,12 @@ fun MovieCategoryLayout(
     modifier: Modifier,
     categoryViewState: HomeMovieCategoryViewState,
     title: Int,
-    onNavigateToMovieDetails: () -> Unit,
-    onFavoriteButtonClicked: () -> Unit
+    onNavigateToMovieDetails: (Int) -> Unit,
+    onFavoriteButtonClicked: () -> Unit,
+    onCategoryClicked: (Int, List<MovieCategoryLabelViewState>) -> Unit
 ) {
+    println("currentRecomposeScope $currentRecomposeScope")
+
     Text(
         modifier = Modifier
             .padding(20.dp),
@@ -154,7 +263,7 @@ fun MovieCategoryLayout(
             MovieCategoryLabel(
                 movieCategoryLabelViewState = category,
                 modifier = Modifier.padding(5.dp),
-                onClick = { /* TODO */ }
+                onClick = { onCategoryClicked(category.itemId, categoryViewState.movieCategories) }
             )
         }
     }
@@ -181,12 +290,13 @@ fun MovieCategoryLayout(
                         isFavorite = movie.isFavorite
                     ),
                     onFavoriteButtonClicked = { onFavoriteButtonClicked() },
-                    onClick =  { onNavigateToMovieDetails() }
+                    onClick = { onNavigateToMovieDetails(movie.id) }
                 )
             }
         })
 }
 
+/*
 @Preview
 @Composable
 fun HomeScreenPreview() {
@@ -195,6 +305,9 @@ fun HomeScreenPreview() {
         nowPlayingCategoryViewState = nowPlayingCategoryViewState,
         upcomingCategoryViewState = upcomingCategoryViewState,
         onFavoriteButtonClicked = {  },
-        onNavigateToMovieDetails = {  }
+        onNavigateToMovieDetails = {  },
+        onCategoryClicked = {  }
     )
 }
+
+*/

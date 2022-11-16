@@ -6,7 +6,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Divider
 import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
@@ -22,7 +22,7 @@ sealed class MovieCategoryLabelTextViewState {
 
 data class MovieCategoryLabelViewState(
     val itemId: Int,
-    val isSelected: Boolean,
+    var isSelected: Boolean,
     val categoryText: MovieCategoryLabelTextViewState
 )
 
@@ -36,8 +36,7 @@ fun MovieCategoryLabel(
         SelectedText(
             movieCategoryLabelViewState = movieCategoryLabelViewState,
             modifier = modifier
-                .width(intrinsicSize = IntrinsicSize.Max),
-            onClick = onClick
+                .width(intrinsicSize = IntrinsicSize.Max)
         )
     } else {
         UnselectedText(
@@ -52,11 +51,8 @@ fun MovieCategoryLabel(
 fun SelectedText(
     movieCategoryLabelViewState: MovieCategoryLabelViewState,
     modifier: Modifier,
-    onClick: () -> Unit
 ) {
-    Column(
-        modifier = modifier.clickable { onClick() }
-    ) {
+    Column(modifier = modifier) {
         Text(
             text = selectTextSource(movieCategoryLabelViewState = movieCategoryLabelViewState),
             color = Color.Black,
