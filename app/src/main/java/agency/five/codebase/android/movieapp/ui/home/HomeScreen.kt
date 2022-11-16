@@ -67,18 +67,19 @@ fun HomeRoute(
         onNavigateToMovieDetails = onNavigateToMovieDetails,
         onFavoriteButtonClicked = { onFavoriteButtonClicked() }
     )
+
 }
 
 @Composable
 fun HomeScreen(
     onNavigateToMovieDetails: (Int) -> Unit,
-    onFavoriteButtonClicked: () -> Unit,
+    onFavoriteButtonClicked: () -> Unit
 ) {
-    //THESE STATES ARE NOT TRIGGERING RECOMPOSITION FOR SOME REASON?????????????
     var popularCategoryViewState by remember { mutableStateOf(popularCategoryViewState) }
     var nowPlayingCategoryViewState by remember { mutableStateOf(nowPlayingCategoryViewState) }
     var upcomingCategoryViewState by remember { mutableStateOf(upcomingCategoryViewState) }
 
+    println("currentRecomposeScopeHOME $currentRecomposeScope")
     Column(
         modifier = Modifier
             .verticalScroll(
@@ -93,15 +94,9 @@ fun HomeScreen(
             title = R.string.whats_popular,
             onNavigateToMovieDetails = onNavigateToMovieDetails,
             onFavoriteButtonClicked = { onFavoriteButtonClicked() },
-            /*
-            I PROBABLY BUTCHERED THIS BUT I TRIED CREATING NEW OBJECTS WITH COPY() TO SEE IF I CAN
-            TRIGGER RECOMPOSITION AND I CANT
-
-            CLICKING ON A LABEL DOES NOT TRIGGER RECOMPOSITION BUT THE CLICK IS REMEMBERED AFTER NAVIGATING,
-            SO IF I CLICK ON A LABEL NOTHING WILL HAPPEN BUT AFTER NAVIGATING AWAY AND THEN BACK TO THE HOME SCREEN
-            THE CLICKED LABEL WILL BE SELECTED PROPERLY......
-            */
             onCategoryClicked = { categoryId, categoryList ->
+                println("categoryList $categoryList")
+                println("popularCategories ${agency.five.codebase.android.movieapp.ui.home.popularCategoryViewState}.toString()")
                 when (categoryId) {
                     0 -> {
                         val newList: MutableList<MovieCategoryLabelViewState> = mutableListOf()
@@ -113,6 +108,7 @@ fun HomeScreen(
                         popularCategoryViewState = popularCategoryViewState.copy(
                             movieCategories = newList
                         )
+                        println("popularCategories ${popularCategoryViewState}.toString()")
                     }
 
                     1 -> {
@@ -122,9 +118,12 @@ fun HomeScreen(
                             newList.add(movieCategoryLabelViewState)
                         }
 
-                        popularCategoryViewState = popularCategoryViewState.copy(
-                            movieCategories = newList
-                        )
+                        popularCategoryViewState =
+                            popularCategoryViewState.copy(
+                                movieCategories = newList
+                            )
+
+                        println("popularCategories ${popularCategoryViewState}.toString()")
                     }
 
                     2 -> {
@@ -134,9 +133,12 @@ fun HomeScreen(
                             newList.add(movieCategoryLabelViewState)
                         }
 
-                        popularCategoryViewState = popularCategoryViewState.copy(
-                            movieCategories = newList
-                        )
+                        popularCategoryViewState =
+                            popularCategoryViewState.copy(
+                                movieCategories = newList
+                            )
+
+                        println("popularCategories ${popularCategoryViewState}.toString()")
                     }
 
                     3 -> {
@@ -146,9 +148,62 @@ fun HomeScreen(
                             newList.add(movieCategoryLabelViewState)
                         }
 
-                        popularCategoryViewState = popularCategoryViewState.copy(
-                            movieCategories = newList
-                        )
+                        popularCategoryViewState =
+                            popularCategoryViewState.copy(
+                                movieCategories = newList
+                            )
+
+                        println("popularCategories ${popularCategoryViewState}.toString()")
+                    }
+                    4 -> {
+                        val newList: MutableList<MovieCategoryLabelViewState> = mutableListOf()
+                        categoryList.forEachIndexed { index, movieCategoryLabelViewState ->
+                            movieCategoryLabelViewState.isSelected = index == 0
+                            newList.add(movieCategoryLabelViewState)
+                        }
+
+                        nowPlayingCategoryViewState =
+                            nowPlayingCategoryViewState.copy(
+                                movieCategories = newList
+                            )
+                    }
+
+                    5 -> {
+                        val newList: MutableList<MovieCategoryLabelViewState> = mutableListOf()
+                        categoryList.forEachIndexed { index, movieCategoryLabelViewState ->
+                            movieCategoryLabelViewState.isSelected = index == 1
+                            newList.add(movieCategoryLabelViewState)
+                        }
+
+                        nowPlayingCategoryViewState =
+                            nowPlayingCategoryViewState.copy(
+                                movieCategories = newList
+                            )
+                    }
+                    6 -> {
+                        val newList: MutableList<MovieCategoryLabelViewState> = mutableListOf()
+                        categoryList.forEachIndexed { index, movieCategoryLabelViewState ->
+                            movieCategoryLabelViewState.isSelected = index == 0
+                            newList.add(movieCategoryLabelViewState)
+                        }
+
+                        upcomingCategoryViewState =
+                            upcomingCategoryViewState.copy(
+                                movieCategories = newList
+                            )
+                    }
+
+                    7 -> {
+                        val newList: MutableList<MovieCategoryLabelViewState> = mutableListOf()
+                        categoryList.forEachIndexed { index, movieCategoryLabelViewState ->
+                            movieCategoryLabelViewState.isSelected = index == 1
+                            newList.add(movieCategoryLabelViewState)
+                        }
+
+                        upcomingCategoryViewState =
+                            upcomingCategoryViewState.copy(
+                                movieCategories = newList
+                            )
                     }
                 }
             }
@@ -161,6 +216,8 @@ fun HomeScreen(
             onNavigateToMovieDetails = onNavigateToMovieDetails,
             onFavoriteButtonClicked = { onFavoriteButtonClicked() },
             onCategoryClicked = { categoryId, categoryList ->
+                println("categoryList $categoryList")
+                println("popularCategories ${agency.five.codebase.android.movieapp.ui.home.popularCategoryViewState}.toString()")
                 when (categoryId) {
                     4 -> {
                         val newList: MutableList<MovieCategoryLabelViewState> = mutableListOf()
@@ -169,9 +226,10 @@ fun HomeScreen(
                             newList.add(movieCategoryLabelViewState)
                         }
 
-                        nowPlayingCategoryViewState = nowPlayingCategoryViewState.copy(
-                            movieCategories = newList
-                        )
+                        nowPlayingCategoryViewState =
+                            nowPlayingCategoryViewState.copy(
+                                movieCategories = newList
+                            )
                     }
 
                     5 -> {
@@ -181,9 +239,10 @@ fun HomeScreen(
                             newList.add(movieCategoryLabelViewState)
                         }
 
-                        nowPlayingCategoryViewState = nowPlayingCategoryViewState.copy(
-                            movieCategories = newList
-                        )
+                        nowPlayingCategoryViewState =
+                            nowPlayingCategoryViewState.copy(
+                                movieCategories = newList
+                            )
                     }
                 }
             }
@@ -196,6 +255,8 @@ fun HomeScreen(
             onNavigateToMovieDetails = onNavigateToMovieDetails,
             onFavoriteButtonClicked = { onFavoriteButtonClicked() },
             onCategoryClicked = { categoryId, categoryList ->
+                println("categoryList $categoryList")
+                println("popularCategories ${agency.five.codebase.android.movieapp.ui.home.popularCategoryViewState}.toString()")
                 when (categoryId) {
                     6 -> {
                         val newList: MutableList<MovieCategoryLabelViewState> = mutableListOf()
@@ -204,9 +265,10 @@ fun HomeScreen(
                             newList.add(movieCategoryLabelViewState)
                         }
 
-                        upcomingCategoryViewState = upcomingCategoryViewState.copy(
-                            movieCategories = newList
-                        )
+                        upcomingCategoryViewState =
+                            upcomingCategoryViewState.copy(
+                                movieCategories = newList
+                            )
                     }
 
                     7 -> {
@@ -216,16 +278,15 @@ fun HomeScreen(
                             newList.add(movieCategoryLabelViewState)
                         }
 
-                        upcomingCategoryViewState = upcomingCategoryViewState.copy(
-                            movieCategories = newList
-                        )
+                        upcomingCategoryViewState =
+                            upcomingCategoryViewState.copy(
+                                movieCategories = newList
+                            )
                     }
-
                 }
             }
         )
     }
-
 }
 
 @Composable
@@ -237,7 +298,8 @@ fun MovieCategoryLayout(
     onFavoriteButtonClicked: () -> Unit,
     onCategoryClicked: (Int, List<MovieCategoryLabelViewState>) -> Unit
 ) {
-    println("currentRecomposeScope $currentRecomposeScope")
+    println("currentRecomposeScopeCATEGORY $currentRecomposeScope")
+    println("categories ${categoryViewState.movieCategories}")
 
     Text(
         modifier = Modifier
@@ -263,7 +325,7 @@ fun MovieCategoryLayout(
             MovieCategoryLabel(
                 movieCategoryLabelViewState = category,
                 modifier = Modifier.padding(5.dp),
-                onClick = { onCategoryClicked(category.itemId, categoryViewState.movieCategories) }
+                onClick = { onCategoryClicked(it, categoryViewState.movieCategories) }
             )
         }
     }

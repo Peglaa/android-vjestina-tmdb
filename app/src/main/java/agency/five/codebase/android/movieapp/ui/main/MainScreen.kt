@@ -4,7 +4,7 @@ import agency.five.codebase.android.movieapp.R
 import agency.five.codebase.android.movieapp.navigation.MOVIE_ID_KEY
 import agency.five.codebase.android.movieapp.navigation.NavigationItem
 import agency.five.codebase.android.movieapp.ui.favorites.FavoritesRoute
-import agency.five.codebase.android.movieapp.ui.home.HomeRoute
+import agency.five.codebase.android.movieapp.ui.home.*
 import agency.five.codebase.android.movieapp.ui.moviedetails.MovieDetailsRoute
 import agency.five.codebase.android.movieapp.ui.theme.Blue
 import androidx.compose.foundation.Image
@@ -83,7 +83,7 @@ fun MainScreen() {
                             )
                             showBottomBar = !showBottomBar
                         },
-                        onFavoriteButtonClicked = {}// your code goes here ...
+                        onFavoriteButtonClicked = {} // your code goes here ...
                     )
                 }
                 composable(NavigationItem.FavoritesDestination.route) {

@@ -30,7 +30,7 @@ data class MovieCategoryLabelViewState(
 fun MovieCategoryLabel(
     movieCategoryLabelViewState: MovieCategoryLabelViewState,
     modifier: Modifier,
-    onClick: () -> Unit
+    onClick: (Int) -> Unit
 ) {
     if (movieCategoryLabelViewState.isSelected) {
         SelectedText(
@@ -69,13 +69,13 @@ fun SelectedText(
 fun UnselectedText(
     movieCategoryLabelViewState: MovieCategoryLabelViewState,
     modifier: Modifier,
-    onClick: () -> Unit
+    onClick: (Int) -> Unit
 ) {
     Text(
         text = selectTextSource(movieCategoryLabelViewState = movieCategoryLabelViewState),
         color = Color.Gray,
         fontSize = 16.sp,
-        modifier = modifier.clickable { onClick() }
+        modifier = modifier.clickable { onClick(movieCategoryLabelViewState.itemId) }
     )
 }
 
