@@ -173,7 +173,7 @@ private fun BottomNavigationBar(
         destinations.forEach { destination ->
             AddItem(
                 destination = destination,
-                onNavigateToDestination = { onNavigateToDestination(destination) },
+                onNavigateToDestination = onNavigateToDestination,
                 currentDestination = currentDestination
             )
         }
@@ -209,6 +209,7 @@ fun RowScope.AddItem(
             )
         },
         selected = currentDestination?.route == destination.route,
+        enabled = currentDestination?.route != destination.route,
         onClick = { onNavigateToDestination(destination) }
     )
 }
