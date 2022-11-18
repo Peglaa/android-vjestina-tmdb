@@ -73,6 +73,14 @@ fun HomeRoute(
         onMovieCategoryClicked = { categoryId, categoryList ->
             println("categoryList $categoryList")
             println("popularCategories ${agency.five.codebase.android.movieapp.ui.home.popularCategoryViewState}.toString()")
+
+            /*
+            THIS WORKS EXCEPT IT REFUSES TO RECOMPOSE ON CLICK AND THE CHANGE IS ONLY VISIBLE
+            AFTER NAVIGATING OUT OF AND THEN BACK INTO THE HOME SCREEN
+            I TRIED WITH COPY() BUT IT'S STILL NOT TRIGGERING AND I HAVE NO IDEA WHY
+            ALSO I PRESUME THERE IS A CLEANER WAY OF IMPLEMENTING THIS ON CLICK FUNCTION?
+             */
+
             when (categoryId) {
                 0 -> {
                     val newList: MutableList<MovieCategoryLabelViewState> = mutableListOf()
@@ -201,6 +209,13 @@ fun HomeScreen(
             )
     )
     {
+
+        /*
+        I HAVE NOTICED THAT THESE COMPONENTS(MOVIECATEGORYLAYOUT()) RECOMPOSE TWICE WHEN NAVIGATING TO THIS SCREEN.
+        SOMETHING MIGHT BE WRONG WITH THEM BUT IM NOT SURE WHAT AND IT MIGHT BE CONNECTED TO THEM
+        NOT RECOMPOSING WHEN CLICKING ON A LABEL AS DESCRIBED ABOVE
+        */
+
         MovieCategoryLayout(
             modifier = Modifier,
             categoryViewState = popularCategoryViewState,
@@ -211,7 +226,7 @@ fun HomeScreen(
 
         )
 
-        /*MovieCategoryLayout(
+        MovieCategoryLayout(
             modifier = Modifier,
             categoryViewState = nowPlayingCategoryViewState,
             title = R.string.now_playing,
@@ -227,7 +242,7 @@ fun HomeScreen(
             onNavigateToMovieDetails = onNavigateToMovieDetails,
             onFavoriteButtonClicked = { onFavoriteButtonClicked() },
             onCategoryClicked = onMovieCategoryClicked
-        )*/
+        )
     }
 }
 
@@ -301,18 +316,18 @@ fun MovieCategoryLayout(
     )
 }
 
-/*
+
 @Preview
 @Composable
 fun HomeScreenPreview() {
 HomeScreen(
-    popularCategoryViewState = popularCategoryViewState,
-    nowPlayingCategoryViewState = nowPlayingCategoryViewState,
-    upcomingCategoryViewState = upcomingCategoryViewState,
     onFavoriteButtonClicked = {  },
     onNavigateToMovieDetails = {  },
-    onCategoryClicked = {  }
+    onMovieCategoryClicked = { _, _ ->
+
+    }
 )
+
 }
 
-*/
+
