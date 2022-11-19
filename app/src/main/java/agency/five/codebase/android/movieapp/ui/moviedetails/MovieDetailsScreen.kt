@@ -5,6 +5,7 @@ import agency.five.codebase.android.movieapp.mock.MoviesMock
 import agency.five.codebase.android.movieapp.ui.component.*
 import agency.five.codebase.android.movieapp.ui.moviedetails.mapper.MovieDetailsMapper
 import agency.five.codebase.android.movieapp.ui.moviedetails.mapper.MovieDetailsMapperImpl
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.grid.GridCells
@@ -38,19 +39,26 @@ private val movieDetailsViewState: MovieDetailsViewState =
 
 @Composable
 fun MovieDetailsRoute(
+    onBackPressed: () -> Unit
 
 ) {
     val movieDetailsViewState by remember { mutableStateOf(movieDetailsViewState) }
 
     MovieDetailsScreen(
-        movieDetailsViewState = movieDetailsViewState
+        movieDetailsViewState = movieDetailsViewState,
+        onBackPressed = onBackPressed
     )
 }
 
 @Composable
 fun MovieDetailsScreen(
-    movieDetailsViewState: MovieDetailsViewState
+    movieDetailsViewState: MovieDetailsViewState,
+    onBackPressed: () -> Unit
 ) {
+    BackHandler(
+        onBack = onBackPressed
+    )
+
     Column(
         modifier = Modifier.verticalScroll(
             state = rememberScrollState(),
@@ -251,7 +259,8 @@ fun TopBilledCast(
 @Composable
 fun MovieDetailsScreenPreview() {
     MovieDetailsScreen(
-        movieDetailsViewState = movieDetailsViewState
+        movieDetailsViewState = movieDetailsViewState,
+        onBackPressed = {}
     )
 }
 

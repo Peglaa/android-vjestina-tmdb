@@ -41,7 +41,7 @@ fun MainScreen() {
             TopBar(
                 navigationIcon = {
                     if (showBackIcon) BackIcon(onBackClick = {
-                        navController.popBackStack()
+                        navController.navigateUp()
                         showBottomBar = !showBottomBar
                     })
                 },
@@ -100,7 +100,12 @@ fun MainScreen() {
                     route = NavigationItem.MovieDetailsDestination.route,
                     arguments = listOf(navArgument(MOVIE_ID_KEY) { type = NavType.IntType }),
                 ) {
-                    MovieDetailsRoute()
+                    MovieDetailsRoute(
+                        onBackPressed = {
+                            showBottomBar = !showBottomBar
+                            navController.navigateUp()
+                        }
+                    )
                 }
             }
         }
