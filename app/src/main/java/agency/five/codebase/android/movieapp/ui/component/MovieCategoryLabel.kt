@@ -22,7 +22,7 @@ sealed class MovieCategoryLabelTextViewState {
 
 data class MovieCategoryLabelViewState(
     val itemId: Int,
-    var isSelected: Boolean,
+    val isSelected: Boolean,
     val categoryText: MovieCategoryLabelTextViewState
 )
 
@@ -32,18 +32,20 @@ fun MovieCategoryLabel(
     modifier: Modifier,
     onClick: (Int) -> Unit
 ) {
-    if (movieCategoryLabelViewState.isSelected) {
-        SelectedText(
-            movieCategoryLabelViewState = movieCategoryLabelViewState,
-            modifier = modifier
-                .width(intrinsicSize = IntrinsicSize.Max)
-        )
-    } else {
-        UnselectedText(
-            movieCategoryLabelViewState = movieCategoryLabelViewState,
-            modifier = modifier,
-            onClick = onClick
-        )
+    when (movieCategoryLabelViewState.isSelected) {
+        true ->
+            SelectedText(
+                movieCategoryLabelViewState = movieCategoryLabelViewState,
+                modifier = modifier
+                    .width(intrinsicSize = IntrinsicSize.Max)
+            )
+
+        false ->
+            UnselectedText(
+                movieCategoryLabelViewState = movieCategoryLabelViewState,
+                modifier = modifier,
+                onClick = onClick
+            )
     }
 }
 

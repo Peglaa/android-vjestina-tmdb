@@ -68,12 +68,12 @@ fun HomeRoute(
     var upcomingCategoryViewState by remember { mutableStateOf(upcomingCategoryViewState) }
 
     HomeScreen(
+        popularCategoryViewState = popularCategoryViewState,
+        nowPlayingCategoryViewState = nowPlayingCategoryViewState,
+        upcomingCategoryViewState = upcomingCategoryViewState,
         onNavigateToMovieDetails = onNavigateToMovieDetails,
         onFavoriteButtonClicked = { onFavoriteButtonClicked() },
         onMovieCategoryClicked = { categoryId, categoryList ->
-            println("categoryList $categoryList")
-            println("popularCategories ${agency.five.codebase.android.movieapp.ui.home.popularCategoryViewState}.toString()")
-
             /*
             THIS WORKS EXCEPT IT REFUSES TO RECOMPOSE ON CLICK AND THE CHANGE IS ONLY VISIBLE
             AFTER NAVIGATING OUT OF AND THEN BACK INTO THE HOME SCREEN
@@ -81,114 +81,41 @@ fun HomeRoute(
             ALSO I PRESUME THERE IS A CLEANER WAY OF IMPLEMENTING THIS ON CLICK FUNCTION?
              */
 
-            when (categoryId) {
-                0 -> {
-                    val newList: MutableList<MovieCategoryLabelViewState> = mutableListOf()
-                    categoryList.forEachIndexed { index, movieCategoryLabelViewState ->
-                        movieCategoryLabelViewState.isSelected = index == 0
-                        newList.add(movieCategoryLabelViewState)
-                    }
+            val newList: MutableList<MovieCategoryLabelViewState> = mutableListOf()
+            val tmp = when (categoryId) {
+                in (0..3) -> categoryId
+                in (4..5) -> categoryId - 4
+                in (6..7) -> categoryId - 6
+                else -> throw IllegalStateException()
+            }
 
-                    popularCategoryViewState = popularCategoryViewState.copy(
-                        movieCategories = newList
+            categoryList.forEachIndexed { index, movieCategoryLabelViewState ->
+                newList.add(
+                    movieCategoryLabelViewState.copy(
+                        isSelected = index == tmp
                     )
-                    println("popularCategories ${popularCategoryViewState}.toString()")
-                }
-
-                1 -> {
-                    val newList: MutableList<MovieCategoryLabelViewState> = mutableListOf()
-                    categoryList.forEachIndexed { index, movieCategoryLabelViewState ->
-                        movieCategoryLabelViewState.isSelected = index == 1
-                        newList.add(movieCategoryLabelViewState)
-                    }
-
+                )
+            }
+            when (categoryId) {
+                in (0..3) -> {
                     popularCategoryViewState =
-                        popularCategoryViewState.copy(
+                        nowPlayingCategoryViewState.copy(
                             movieCategories = newList
                         )
-
-                    println("popularCategories ${popularCategoryViewState}.toString()")
                 }
-
-                2 -> {
-                    val newList: MutableList<MovieCategoryLabelViewState> = mutableListOf()
-                    categoryList.forEachIndexed { index, movieCategoryLabelViewState ->
-                        movieCategoryLabelViewState.isSelected = index == 2
-                        newList.add(movieCategoryLabelViewState)
-                    }
-
-                    popularCategoryViewState =
-                        popularCategoryViewState.copy(
-                            movieCategories = newList
-                        )
-
-                    println("popularCategories ${popularCategoryViewState}.toString()")
-                }
-
-                3 -> {
-                    val newList: MutableList<MovieCategoryLabelViewState> = mutableListOf()
-                    categoryList.forEachIndexed { index, movieCategoryLabelViewState ->
-                        movieCategoryLabelViewState.isSelected = index == 3
-                        newList.add(movieCategoryLabelViewState)
-                    }
-
-                    popularCategoryViewState =
-                        popularCategoryViewState.copy(
-                            movieCategories = newList
-                        )
-
-                    println("popularCategories ${popularCategoryViewState}.toString()")
-                }
-                4 -> {
-                    val newList: MutableList<MovieCategoryLabelViewState> = mutableListOf()
-                    categoryList.forEachIndexed { index, movieCategoryLabelViewState ->
-                        movieCategoryLabelViewState.isSelected = index == 0
-                        newList.add(movieCategoryLabelViewState)
-                    }
-
+                in (4..5) -> {
                     nowPlayingCategoryViewState =
                         nowPlayingCategoryViewState.copy(
                             movieCategories = newList
                         )
                 }
-
-                5 -> {
-                    val newList: MutableList<MovieCategoryLabelViewState> = mutableListOf()
-                    categoryList.forEachIndexed { index, movieCategoryLabelViewState ->
-                        movieCategoryLabelViewState.isSelected = index == 1
-                        newList.add(movieCategoryLabelViewState)
-                    }
-
-                    nowPlayingCategoryViewState =
-                        nowPlayingCategoryViewState.copy(
-                            movieCategories = newList
-                        )
-                }
-                6 -> {
-                    val newList: MutableList<MovieCategoryLabelViewState> = mutableListOf()
-                    categoryList.forEachIndexed { index, movieCategoryLabelViewState ->
-                        movieCategoryLabelViewState.isSelected = index == 0
-                        newList.add(movieCategoryLabelViewState)
-                    }
-
+                in (6..7) -> {
                     upcomingCategoryViewState =
                         upcomingCategoryViewState.copy(
                             movieCategories = newList
                         )
                 }
-
-                7 -> {
-                    val newList: MutableList<MovieCategoryLabelViewState> = mutableListOf()
-                    categoryList.forEachIndexed { index, movieCategoryLabelViewState ->
-                        movieCategoryLabelViewState.isSelected = index == 1
-                        newList.add(movieCategoryLabelViewState)
-                    }
-
-                    upcomingCategoryViewState =
-                        upcomingCategoryViewState.copy(
-                            movieCategories = newList
-                        )
-                }
+                else -> throw IllegalStateException()
             }
         }
     )
@@ -198,7 +125,10 @@ fun HomeRoute(
 fun HomeScreen(
     onNavigateToMovieDetails: (Int) -> Unit,
     onFavoriteButtonClicked: () -> Unit,
-    onMovieCategoryClicked: (Int, List<MovieCategoryLabelViewState>) -> Unit
+    onMovieCategoryClicked: (Int, List<MovieCategoryLabelViewState>) -> Unit,
+    popularCategoryViewState: HomeMovieCategoryViewState,
+    nowPlayingCategoryViewState: HomeMovieCategoryViewState,
+    upcomingCategoryViewState: HomeMovieCategoryViewState
 ) {
     //println("currentRecomposeScopeHOME $currentRecomposeScope")
     Column(
@@ -213,7 +143,8 @@ fun HomeScreen(
         /*
         I HAVE NOTICED THAT THESE COMPONENTS(MOVIECATEGORYLAYOUT()) RECOMPOSE TWICE WHEN NAVIGATING TO THIS SCREEN.
         SOMETHING MIGHT BE WRONG WITH THEM BUT IM NOT SURE WHAT AND IT MIGHT BE CONNECTED TO THEM
-        NOT RECOMPOSING WHEN CLICKING ON A LABEL AS DESCRIBED ABOVE
+        NOT RECOMPOSING WHEN CLICKING ON A LABEL AS DESCRIBED ABOVE AND IF I HAD TO GUESS THE FAULT
+        LIES IN MY MOVIECATEGORYLABEL COMPONENT
         */
 
         MovieCategoryLayout(
@@ -317,17 +248,17 @@ fun MovieCategoryLayout(
 }
 
 
-@Preview
+/*@Preview
 @Composable
 fun HomeScreenPreview() {
-HomeScreen(
-    onFavoriteButtonClicked = {  },
-    onNavigateToMovieDetails = {  },
-    onMovieCategoryClicked = { _, _ ->
+    HomeScreen(
+        onFavoriteButtonClicked = { },
+        onNavigateToMovieDetails = { },
+        onMovieCategoryClicked = { _, _ ->
 
-    }
-)
+        }
+    )
 
-}
+}*/
 
 
