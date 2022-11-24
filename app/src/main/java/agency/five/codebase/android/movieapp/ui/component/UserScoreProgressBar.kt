@@ -79,7 +79,7 @@ fun UserScoreProgressBar(
 
 @Preview(showBackground = true)
 @Composable
-fun CircularProgressBarPreview() {
+private fun CircularProgressBarPreview() {
     UserScoreProgressBar(
         score = 0.08f,
         modifier = Modifier

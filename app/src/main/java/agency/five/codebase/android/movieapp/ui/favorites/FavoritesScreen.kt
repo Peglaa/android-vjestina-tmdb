@@ -39,9 +39,8 @@ fun FavoritesRoute(
     )
 }
 
-
 //Extension function for scrollable header cause it's a cleaner approach(to me)?
-fun LazyGridScope.header(
+private fun LazyGridScope.header(
     content: @Composable LazyGridItemScope.() -> Unit
 ) {
     item(
@@ -51,7 +50,7 @@ fun LazyGridScope.header(
 }
 
 @Composable
-fun FavoritesScreen(
+private fun FavoritesScreen(
     modifier: Modifier,
     favoritesViewState: FavoritesViewState,
     onCardClick: (Int) -> Unit,
@@ -72,14 +71,15 @@ fun FavoritesScreen(
             }
             items(
                 items = favoritesViewState.favoriteMoviesViewStates,
-                key = { movie -> movie.id }) { card ->
+                key = { movie -> movie.id }
+            ) { card ->
                 MovieCard(
                     modifier = Modifier
                         .width(120.dp)
                         .height(180.dp),
                     movieCardViewState = card.movieCardViewState,
                     onClick = { onCardClick(card.id) },
-                    onFavoriteButtonClicked = { onFavoriteButtonClick() }
+                    onFavoriteButtonClicked = onFavoriteButtonClick
                 )
             }
         },
@@ -89,7 +89,7 @@ fun FavoritesScreen(
 
 @Preview
 @Composable
-fun FavoritesScreenPreview() {
+private fun FavoritesScreenPreview() {
     val favoritesScreenModifier = Modifier
         .fillMaxSize()
         .padding(15.dp)

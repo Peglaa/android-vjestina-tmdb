@@ -40,19 +40,19 @@ val upcomingCategories = listOf(
 
 val homeScreenMapper: HomeScreenMapper = HomeScreenMapperImpl()
 
-val popularCategoryViewState = homeScreenMapper.toHomeMovieCategoryViewState(
+val defaultPopularCategoryViewState = homeScreenMapper.toHomeMovieCategoryViewState(
     movieCategories = popularCategories,
     selectedMovieCategory = MovieCategory.POPULAR_STREAMING,
     movies = MoviesMock.getMoviesList()
 )
 
-val nowPlayingCategoryViewState = homeScreenMapper.toHomeMovieCategoryViewState(
+val defaultNowPlayingCategoryViewState = homeScreenMapper.toHomeMovieCategoryViewState(
     movieCategories = nowPlayingCategories,
     selectedMovieCategory = MovieCategory.NOW_PLAYING_MOVIES,
     movies = MoviesMock.getMoviesList()
 )
 
-val upcomingCategoryViewState = homeScreenMapper.toHomeMovieCategoryViewState(
+val defaultUpcomingCategoryViewState = homeScreenMapper.toHomeMovieCategoryViewState(
     movieCategories = upcomingCategories,
     selectedMovieCategory = MovieCategory.UPCOMING_TODAY,
     movies = MoviesMock.getMoviesList()
@@ -60,55 +60,40 @@ val upcomingCategoryViewState = homeScreenMapper.toHomeMovieCategoryViewState(
 
 @Composable
 fun HomeRoute(
-    onNavigateToMovieDetails: (Int) -> Unit,
-    onFavoriteButtonClicked: () -> Unit,
+    onNavigateToMovieDetails: (Int) -> Unit
 ) {
-    var popularCategoryViewState by remember { mutableStateOf(popularCategoryViewState) }
-    var nowPlayingCategoryViewState by remember { mutableStateOf(nowPlayingCategoryViewState) }
-    var upcomingCategoryViewState by remember { mutableStateOf(upcomingCategoryViewState) }
+    var popularCategoryViewState by remember { mutableStateOf(defaultPopularCategoryViewState) }
+    var nowPlayingCategoryViewState by remember { mutableStateOf(defaultNowPlayingCategoryViewState) }
+    var upcomingCategoryViewState by remember { mutableStateOf(defaultUpcomingCategoryViewState) }
 
     HomeScreen(
         popularCategoryViewState = popularCategoryViewState,
         nowPlayingCategoryViewState = nowPlayingCategoryViewState,
         upcomingCategoryViewState = upcomingCategoryViewState,
         onNavigateToMovieDetails = onNavigateToMovieDetails,
-        onFavoriteButtonClicked = { onFavoriteButtonClicked() },
-        onMovieCategoryClicked = { categoryId, categoryList ->
-
-            val newList: MutableList<MovieCategoryLabelViewState> = mutableListOf()
-            val tmp = when (categoryId) {
-                in (0..3) -> categoryId
-                in (4..5) -> categoryId - 4
-                in (6..7) -> categoryId - 6
-                else -> throw IllegalStateException()
-            }
-
-            categoryList.forEachIndexed { index, movieCategoryLabelViewState ->
-                newList.add(
-                    movieCategoryLabelViewState.copy(
-                        isSelected = index == tmp
-                    )
-                )
-            }
+        onFavoriteButtonClicked = {  } ,
+        onMovieCategoryClicked = { categoryId ->
             when (categoryId) {
-                in (0..3) -> {
-                    popularCategoryViewState =
-                        nowPlayingCategoryViewState.copy(
-                            movieCategories = newList
-                        )
+                MovieCategory.POPULAR_STREAMING.ordinal,
+                MovieCategory.POPULAR_FOR_RENT.ordinal,
+                MovieCategory.POPULAR_ON_TV.ordinal,
+                MovieCategory.POPULAR_IN_THEATERS.ordinal
+                -> {
+                    popularCategoryViewState = mapToViewState(popularCategories, categoryId)
                 }
-                in (4..5) -> {
-                    nowPlayingCategoryViewState =
-                        nowPlayingCategoryViewState.copy(
-                            movieCategories = newList
-                        )
+
+                MovieCategory.NOW_PLAYING_MOVIES.ordinal,
+                MovieCategory.NOW_PLAYING_TV.ordinal
+                -> {
+                    nowPlayingCategoryViewState = mapToViewState(nowPlayingCategories, categoryId)
                 }
-                in (6..7) -> {
-                    upcomingCategoryViewState =
-                        upcomingCategoryViewState.copy(
-                            movieCategories = newList
-                        )
+
+                MovieCategory.UPCOMING_TODAY.ordinal,
+                MovieCategory.UPCOMING_THIS_WEEK.ordinal
+                -> {
+                    upcomingCategoryViewState = mapToViewState(upcomingCategories, categoryId)
                 }
+
                 else -> throw IllegalStateException()
             }
         }
@@ -116,10 +101,10 @@ fun HomeRoute(
 }
 
 @Composable
-fun HomeScreen(
+private fun HomeScreen(
     onNavigateToMovieDetails: (Int) -> Unit,
     onFavoriteButtonClicked: () -> Unit,
-    onMovieCategoryClicked: (Int, List<MovieCategoryLabelViewState>) -> Unit,
+    onMovieCategoryClicked: (Int) -> Unit,
     popularCategoryViewState: HomeMovieCategoryViewState,
     nowPlayingCategoryViewState: HomeMovieCategoryViewState,
     upcomingCategoryViewState: HomeMovieCategoryViewState
@@ -137,7 +122,7 @@ fun HomeScreen(
             categoryViewState = popularCategoryViewState,
             title = R.string.whats_popular,
             onNavigateToMovieDetails = onNavigateToMovieDetails,
-            onFavoriteButtonClicked = { onFavoriteButtonClicked() },
+            onFavoriteButtonClicked = onFavoriteButtonClicked,
             onCategoryClicked = onMovieCategoryClicked
 
         )
@@ -147,7 +132,7 @@ fun HomeScreen(
             categoryViewState = nowPlayingCategoryViewState,
             title = R.string.now_playing,
             onNavigateToMovieDetails = onNavigateToMovieDetails,
-            onFavoriteButtonClicked = { onFavoriteButtonClicked() },
+            onFavoriteButtonClicked = onFavoriteButtonClicked,
             onCategoryClicked = onMovieCategoryClicked
         )
 
@@ -156,20 +141,20 @@ fun HomeScreen(
             categoryViewState = upcomingCategoryViewState,
             title = R.string.upcoming,
             onNavigateToMovieDetails = onNavigateToMovieDetails,
-            onFavoriteButtonClicked = { onFavoriteButtonClicked() },
+            onFavoriteButtonClicked = onFavoriteButtonClicked,
             onCategoryClicked = onMovieCategoryClicked
         )
     }
 }
 
 @Composable
-fun MovieCategoryLayout(
+private fun MovieCategoryLayout(
     modifier: Modifier,
     categoryViewState: HomeMovieCategoryViewState,
     title: Int,
     onNavigateToMovieDetails: (Int) -> Unit,
     onFavoriteButtonClicked: () -> Unit,
-    onCategoryClicked: (Int, List<MovieCategoryLabelViewState>) -> Unit
+    onCategoryClicked: (Int) -> Unit
 ) {
     Text(
         modifier = Modifier
@@ -195,7 +180,7 @@ fun MovieCategoryLayout(
             MovieCategoryLabel(
                 movieCategoryLabelViewState = category,
                 modifier = Modifier.padding(5.dp),
-                onClick = { onCategoryClicked(it, categoryViewState.movieCategories) }
+                onClick = { onCategoryClicked(it) }
             )
         }
     }
@@ -229,18 +214,28 @@ fun MovieCategoryLayout(
     )
 }
 
-
-/*@Preview
-@Composable
-fun HomeScreenPreview() {
-    HomeScreen(
-        onFavoriteButtonClicked = { },
-        onNavigateToMovieDetails = { },
-        onMovieCategoryClicked = { _, _ ->
-
-        }
+private fun mapToViewState(
+    categoryList: List<MovieCategory>,
+    categoryId: Int
+): HomeMovieCategoryViewState {
+    return homeScreenMapper.toHomeMovieCategoryViewState(
+        movieCategories = categoryList,
+        selectedMovieCategory = MovieCategory.values()[categoryId],
+        movies = MoviesMock.getMoviesList()
     )
+}
 
-}*/
+@Preview
+@Composable
+private fun HomeScreenPreview() {
+    HomeScreen(
+        onFavoriteButtonClicked = {  },
+        onNavigateToMovieDetails = {  },
+        onMovieCategoryClicked = {  },
+        nowPlayingCategoryViewState = defaultNowPlayingCategoryViewState,
+        upcomingCategoryViewState = defaultUpcomingCategoryViewState,
+        popularCategoryViewState = defaultPopularCategoryViewState
+    )
+}
 
 

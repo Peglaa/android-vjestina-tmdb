@@ -5,7 +5,6 @@ import agency.five.codebase.android.movieapp.mock.MoviesMock
 import agency.five.codebase.android.movieapp.ui.component.*
 import agency.five.codebase.android.movieapp.ui.moviedetails.mapper.MovieDetailsMapper
 import agency.five.codebase.android.movieapp.ui.moviedetails.mapper.MovieDetailsMapperImpl
-import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.grid.GridCells
@@ -38,27 +37,18 @@ private val movieDetailsViewState: MovieDetailsViewState =
     )
 
 @Composable
-fun MovieDetailsRoute(
-    onBackPressed: () -> Unit
-
-) {
+fun MovieDetailsRoute() {
     val movieDetailsViewState by remember { mutableStateOf(movieDetailsViewState) }
 
     MovieDetailsScreen(
-        movieDetailsViewState = movieDetailsViewState,
-        onBackPressed = onBackPressed
+        movieDetailsViewState = movieDetailsViewState
     )
 }
 
 @Composable
-fun MovieDetailsScreen(
-    movieDetailsViewState: MovieDetailsViewState,
-    onBackPressed: () -> Unit
+private fun MovieDetailsScreen(
+    movieDetailsViewState: MovieDetailsViewState
 ) {
-    BackHandler(
-        onBack = onBackPressed
-    )
-
     Column(
         modifier = Modifier.verticalScroll(
             state = rememberScrollState(),
@@ -77,8 +67,6 @@ fun MovieDetailsScreen(
             movieDetailsViewState = movieDetailsViewState
         )
 
-        /*THIS IS A LAZY VERTICAL GRID WITH MAX HEIGHT MODIFIER AND DISABLED SCROLLING SO I CAN AVOID NESTED SCROLLING WITH THE COLUMN(SCREEN)
-        * IS THIS A HACKFIX? (SEEMS LIKE IT IS AND THERE IS A CLEANER SOLUTION)*/
         CrewGrid(
             modifier = Modifier
                 .padding(
@@ -105,7 +93,7 @@ fun MovieDetailsScreen(
 }
 
 @Composable
-fun ImageHeader(
+private fun ImageHeader(
     modifier: Modifier,
     movieDetailsViewState: MovieDetailsViewState
 ) {
@@ -157,16 +145,15 @@ fun ImageHeader(
                     .padding(10.dp)
                     .size(50.dp)
                     .weight(0.15F),
-                isFavorite = movieDetailsViewState.isFavorite
-            ) {
-
-            }
+                isFavorite = movieDetailsViewState.isFavorite,
+                onClick = {  }
+            )
         }
     }
 }
 
 @Composable
-fun Overview(
+private fun Overview(
     modifier: Modifier,
     movieDetailsViewState: MovieDetailsViewState
 ) {
@@ -188,7 +175,7 @@ fun Overview(
 }
 
 @Composable
-fun CrewGrid(
+private fun CrewGrid(
     modifier: Modifier,
     movieDetailsViewState: MovieDetailsViewState
 ) {
@@ -200,7 +187,8 @@ fun CrewGrid(
         content = {
             items(
                 items = movieDetailsViewState.crew,
-                key = { crew -> crew.id }) { crewItem ->
+                key = { crew -> crew.id }
+            ) { crewItem ->
                 CrewItem(
                     crewItemViewState = CrewItemViewState(
                         id = crewItem.id,
@@ -215,7 +203,7 @@ fun CrewGrid(
 }
 
 @Composable
-fun TopBilledCast(
+private fun TopBilledCast(
     modifier: Modifier,
     movieDetailsViewState: MovieDetailsViewState
 ) {
@@ -257,10 +245,9 @@ fun TopBilledCast(
 
 @Preview
 @Composable
-fun MovieDetailsScreenPreview() {
+private fun MovieDetailsScreenPreview() {
     MovieDetailsScreen(
-        movieDetailsViewState = movieDetailsViewState,
-        onBackPressed = {}
+        movieDetailsViewState = movieDetailsViewState
     )
 }
 

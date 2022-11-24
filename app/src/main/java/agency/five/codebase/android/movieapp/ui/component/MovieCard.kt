@@ -56,7 +56,7 @@ fun MovieCard(
 
 @Preview(showBackground = true)
 @Composable
-fun MovieCardPreview() {
+private fun MovieCardPreview() {
     val movie = MoviesMock.getMoviesList()[0]
     val movieCardViewState = MovieCardViewState(
         imageUrl = movie.imageUrl,

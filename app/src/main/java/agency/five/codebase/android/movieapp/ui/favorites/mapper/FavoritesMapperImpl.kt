@@ -7,12 +7,8 @@ import agency.five.codebase.android.movieapp.ui.favorites.FavoritesViewState
 
 class FavoritesMapperImpl: FavoritesMapper {
     override fun toFavoritesViewState(favoriteMovies: List<Movie>): FavoritesViewState {
-
-        val favoriteMoviesViewStates = mutableListOf<FavoritesMovieViewState>()
-        for (movie in favoriteMovies)
-            favoriteMoviesViewStates.add(mapMovie(movie))
         return FavoritesViewState(
-            favoriteMoviesViewStates = favoriteMoviesViewStates
+            favoriteMoviesViewStates = favoriteMovies.map { mapMovie(it) }
         )
     }
 

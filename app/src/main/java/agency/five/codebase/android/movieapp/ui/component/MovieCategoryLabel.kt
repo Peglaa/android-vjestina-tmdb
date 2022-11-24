@@ -32,25 +32,23 @@ fun MovieCategoryLabel(
     modifier: Modifier,
     onClick: (Int) -> Unit
 ) {
-    when (movieCategoryLabelViewState.isSelected) {
-        true ->
-            SelectedText(
-                movieCategoryLabelViewState = movieCategoryLabelViewState,
-                modifier = modifier
-                    .width(intrinsicSize = IntrinsicSize.Max)
-            )
+    if (movieCategoryLabelViewState.isSelected)
+        SelectedText(
+            movieCategoryLabelViewState = movieCategoryLabelViewState,
+            modifier = modifier
+                .width(intrinsicSize = IntrinsicSize.Max)
+        )
+    else
+        UnselectedText(
+            movieCategoryLabelViewState = movieCategoryLabelViewState,
+            modifier = modifier,
+            onClick = onClick
+        )
 
-        false ->
-            UnselectedText(
-                movieCategoryLabelViewState = movieCategoryLabelViewState,
-                modifier = modifier,
-                onClick = onClick
-            )
-    }
 }
 
 @Composable
-fun SelectedText(
+private fun SelectedText(
     movieCategoryLabelViewState: MovieCategoryLabelViewState,
     modifier: Modifier,
 ) {
@@ -68,7 +66,7 @@ fun SelectedText(
 }
 
 @Composable
-fun UnselectedText(
+private fun UnselectedText(
     movieCategoryLabelViewState: MovieCategoryLabelViewState,
     modifier: Modifier,
     onClick: (Int) -> Unit
@@ -82,7 +80,7 @@ fun UnselectedText(
 }
 
 @Composable
-fun selectTextSource(movieCategoryLabelViewState: MovieCategoryLabelViewState): String {
+private fun selectTextSource(movieCategoryLabelViewState: MovieCategoryLabelViewState): String {
     return when (val categoryText = movieCategoryLabelViewState.categoryText) {
         is MovieCategoryLabelTextViewState.InputText -> categoryText.text
         is MovieCategoryLabelTextViewState.ResourceText -> stringResource(id = categoryText.textRes)
@@ -91,7 +89,7 @@ fun selectTextSource(movieCategoryLabelViewState: MovieCategoryLabelViewState): 
 
 @Preview(showBackground = true)
 @Composable
-fun MovieCategoryLabelPreview() {
+private fun MovieCategoryLabelPreview() {
     //val inputText = MovieCategoryLabelTextViewState.InputText("Movies")
     val stringRes = MovieCategoryLabelTextViewState.ResourceText(R.string.app_name)
     //val categoryViewState1 = MovieCategoryLabelViewState(2, false, inputText)

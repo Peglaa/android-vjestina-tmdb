@@ -2,20 +2,25 @@ package agency.five.codebase.android.movieapp.ui.main
 
 import agency.five.codebase.android.movieapp.R
 import agency.five.codebase.android.movieapp.navigation.MOVIE_ID_KEY
+import agency.five.codebase.android.movieapp.navigation.MovieDetailsDestination
 import agency.five.codebase.android.movieapp.navigation.NavigationItem
 import agency.five.codebase.android.movieapp.ui.favorites.FavoritesRoute
 import agency.five.codebase.android.movieapp.ui.home.*
 import agency.five.codebase.android.movieapp.ui.moviedetails.MovieDetailsRoute
 import agency.five.codebase.android.movieapp.ui.theme.Blue
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -33,17 +38,32 @@ import androidx.navigation.navArgument
 fun MainScreen() {
     val navController = rememberNavController()
     val navBackStackEntry by navController.currentBackStackEntryAsState()
-    var showBottomBar by remember { mutableStateOf(true) }
+    val showBottomBar by remember {
+        derivedStateOf {
+            navBackStackEntry?.destination == navController.findDestination(
+                NavigationItem.HomeDestination.route
+            ) ||
+                    navBackStackEntry?.destination == navController.findDestination(
+                NavigationItem.FavoritesDestination.route
+            )
+        }
+    }
     val showBackIcon = !showBottomBar
+
+    BackHandler(
+        enabled = navBackStackEntry?.destination == navController.findDestination(
+            MovieDetailsDestination.route
+        ),
+        onBack = navController::navigateUp
+    )
 
     Scaffold(
         topBar = {
             TopBar(
                 navigationIcon = {
-                    if (showBackIcon) BackIcon(onBackClick = {
-                        navController.navigateUp()
-                        showBottomBar = !showBottomBar
-                    })
+                    if (showBackIcon) BackIcon(
+                        onBackClick = navController::navigateUp
+                    )
                 },
                 logoImage = { LogoImage() }
             )
@@ -53,7 +73,7 @@ fun MainScreen() {
                 BottomNavigationBar(
                     destinations = listOf(
                         NavigationItem.HomeDestination,
-                        NavigationItem.FavoritesDestination,
+                        NavigationItem.FavoritesDestination
                     ),
                     onNavigateToDestination = {
                         navController.navigate(it.route) {
@@ -79,33 +99,25 @@ fun MainScreen() {
                     HomeRoute(
                         onNavigateToMovieDetails = {
                             navController.navigate(
-                                NavigationItem.MovieDetailsDestination.createNavigationRoute(it)
+                                MovieDetailsDestination.createNavigationRoute(it)
                             )
-                            showBottomBar = !showBottomBar
-                        },
-                        onFavoriteButtonClicked = {} // your code goes here ...
+                        }
                     )
                 }
                 composable(NavigationItem.FavoritesDestination.route) {
                     FavoritesRoute(
                         onNavigateToMovieDetails = {
                             navController.navigate(
-                                NavigationItem.MovieDetailsDestination.createNavigationRoute(it)
+                                MovieDetailsDestination.createNavigationRoute(it)
                             )
-                            showBottomBar = !showBottomBar
                         }
                     )
                 }
                 composable(
-                    route = NavigationItem.MovieDetailsDestination.route,
+                    route = MovieDetailsDestination.route,
                     arguments = listOf(navArgument(MOVIE_ID_KEY) { type = NavType.IntType }),
                 ) {
-                    MovieDetailsRoute(
-                        onBackPressed = {
-                            showBottomBar = !showBottomBar
-                            navController.navigateUp()
-                        }
-                    )
+                    MovieDetailsRoute()
                 }
             }
         }
@@ -140,16 +152,13 @@ private fun BackIcon(
     onBackClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    Image(
+    Icon(
+        imageVector = Icons.Default.ArrowBack,
         modifier = modifier
             .padding(start = 10.dp)
-            .clickable { onBackClick() }
-            .fillMaxHeight(0.02F),
-        contentScale = ContentScale.FillHeight,
-        painter = painterResource(
-            id = R.drawable.ic_back_arrow
-        ),
+            .clickable { onBackClick() },
         contentDescription = stringResource(id = R.string.back_button),
+        tint = Color.White
     )
 }
 
@@ -186,7 +195,7 @@ private fun BottomNavigationBar(
 }
 
 @Composable
-fun RowScope.AddItem(
+private fun RowScope.AddItem(
     destination: NavigationItem,
     onNavigateToDestination: (NavigationItem) -> Unit,
     currentDestination: NavDestination?,
@@ -213,8 +222,7 @@ fun RowScope.AddItem(
                 contentScale = ContentScale.FillHeight
             )
         },
-        selected = currentDestination?.route == destination.route,
-        enabled = currentDestination?.route != destination.route,
-        onClick = { onNavigateToDestination(destination) }
+        onClick = { onNavigateToDestination(destination) },
+        selected = currentDestination?.route == destination.route
     )
 }
