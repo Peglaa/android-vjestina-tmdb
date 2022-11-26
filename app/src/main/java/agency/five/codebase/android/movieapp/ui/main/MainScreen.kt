@@ -47,9 +47,7 @@ fun MainScreen() {
     val showBackIcon = !showBottomBar
 
     BackHandler(
-        enabled = navBackStackEntry?.destination == navController.findDestination(
-            MovieDetailsDestination.route
-        ),
+        enabled = navBackStackEntry?.destination?.route == MovieDetailsDestination.route,
         onBack = navController::navigateUp
     )
 
