@@ -40,12 +40,8 @@ fun MainScreen() {
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val showBottomBar by remember {
         derivedStateOf {
-            navBackStackEntry?.destination == navController.findDestination(
-                NavigationItem.HomeDestination.route
-            ) ||
-                    navBackStackEntry?.destination == navController.findDestination(
-                NavigationItem.FavoritesDestination.route
-            )
+            navBackStackEntry?.destination?.route == NavigationItem.HomeDestination.route ||
+                    navBackStackEntry?.destination?.route == NavigationItem.FavoritesDestination.route
         }
     }
     val showBackIcon = !showBottomBar
