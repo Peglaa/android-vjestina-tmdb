@@ -23,13 +23,13 @@ import agency.five.codebase.android.movieapp.ui.theme.GreenProgressBarBackground
 private const val SCORE_FORMAT = "%.1f"
 
 @Composable
-fun CircularProgressBar(
+fun UserScoreProgressBar(
     modifier: Modifier,
     score: Float,
     radius: Dp = 30.dp,
     colorProgressBar: Color = GreenProgressBar,
     colorProgressBarBackground: Color = GreenProgressBarBackground,
-    strokeWidth: Dp = 5.dp,
+    strokeWidth: Dp = 4.dp,
     animDuration: Int = 1000
 ) {
     val animationPlayed = remember { mutableStateOf(false) }
@@ -72,13 +72,16 @@ fun CircularProgressBar(
         Text(
             text = SCORE_FORMAT.format(score * 10f),
             fontSize = 15.sp,
-            color = Color.Black
+            color = Color.White
         )
     }
 }
 
 @Preview(showBackground = true)
 @Composable
-fun CircularProgressBarPreview() {
-    CircularProgressBar(score = 0.08f, modifier = Modifier)
+private fun CircularProgressBarPreview() {
+    UserScoreProgressBar(
+        score = 0.08f,
+        modifier = Modifier
+    )
 }

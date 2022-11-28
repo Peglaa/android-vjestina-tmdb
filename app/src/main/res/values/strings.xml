@@ -1,4 +1,25 @@
 <resources>
     <string name="app_name">MovieApp</string>
     <string name="fav_button">Favorite button</string>
+    <string name="user_score">User score</string>
+    <string name="overview">Overview</string>
+    <string name="top_billed_cast">Top Billed Cast</string>
+
+    <string name="popular_streaming">Streaming</string>
+    <string name="popular_on_tv">On TV</string>
+    <string name="popular_for_rent">For Rent</string>
+    <string name="popular_in_theaters">In Theaters</string>
+    <string name="now_playing_movies">Movies</string>
+    <string name="now_playing_tv">TV</string>
+    <string name="upcoming_today">Today</string>
+    <string name="upcoming_this_week">This Week</string>
+
+    <string name="whats_popular">What\'s popular</string>
+    <string name="now_playing">Now playing</string>
+    <string name="upcoming">Upcoming</string>
+
+    <string name="home">Home</string>
+    <string name="favorites">Favorites</string>
+    <string name="back_button">Back button</string>
+    <string name="tmdb_logo">TMDB Logo</string>
 </resources>

@@ -2,10 +2,11 @@ package agency.five.codebase.android.movieapp.ui.component
 
 import agency.five.codebase.android.movieapp.R
 import androidx.annotation.StringRes
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Divider
 import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
@@ -28,30 +29,30 @@ data class MovieCategoryLabelViewState(
 @Composable
 fun MovieCategoryLabel(
     movieCategoryLabelViewState: MovieCategoryLabelViewState,
-    modifier: Modifier
+    modifier: Modifier,
+    onClick: (Int) -> Unit
 ) {
-    if (movieCategoryLabelViewState.isSelected) {
+    if (movieCategoryLabelViewState.isSelected)
         SelectedText(
             movieCategoryLabelViewState = movieCategoryLabelViewState,
             modifier = modifier
                 .width(intrinsicSize = IntrinsicSize.Max)
         )
-    } else {
+    else
         UnselectedText(
             movieCategoryLabelViewState = movieCategoryLabelViewState,
-            modifier = modifier
+            modifier = modifier,
+            onClick = onClick
         )
-    }
+
 }
 
 @Composable
-fun SelectedText(
+private fun SelectedText(
     movieCategoryLabelViewState: MovieCategoryLabelViewState,
-    modifier: Modifier
+    modifier: Modifier,
 ) {
-    Column(
-        modifier = modifier
-    ) {
+    Column(modifier = modifier) {
         Text(
             text = selectTextSource(movieCategoryLabelViewState = movieCategoryLabelViewState),
             color = Color.Black,
@@ -65,20 +66,21 @@ fun SelectedText(
 }
 
 @Composable
-fun UnselectedText(
+private fun UnselectedText(
     movieCategoryLabelViewState: MovieCategoryLabelViewState,
-    modifier: Modifier
+    modifier: Modifier,
+    onClick: (Int) -> Unit
 ) {
     Text(
         text = selectTextSource(movieCategoryLabelViewState = movieCategoryLabelViewState),
         color = Color.Gray,
         fontSize = 16.sp,
-        modifier = modifier
+        modifier = modifier.clickable { onClick(movieCategoryLabelViewState.itemId) }
     )
 }
 
 @Composable
-fun selectTextSource(movieCategoryLabelViewState: MovieCategoryLabelViewState): String {
+private fun selectTextSource(movieCategoryLabelViewState: MovieCategoryLabelViewState): String {
     return when (val categoryText = movieCategoryLabelViewState.categoryText) {
         is MovieCategoryLabelTextViewState.InputText -> categoryText.text
         is MovieCategoryLabelTextViewState.ResourceText -> stringResource(id = categoryText.textRes)
@@ -87,13 +89,14 @@ fun selectTextSource(movieCategoryLabelViewState: MovieCategoryLabelViewState): 
 
 @Preview(showBackground = true)
 @Composable
-fun MovieCategoryLabelPreview() {
+private fun MovieCategoryLabelPreview() {
     //val inputText = MovieCategoryLabelTextViewState.InputText("Movies")
     val stringRes = MovieCategoryLabelTextViewState.ResourceText(R.string.app_name)
     //val categoryViewState1 = MovieCategoryLabelViewState(2, false, inputText)
     val categoryViewState2 = MovieCategoryLabelViewState(1, true, stringRes)
     MovieCategoryLabel(
         movieCategoryLabelViewState = categoryViewState2,
-        modifier = Modifier.padding(5.dp)
+        modifier = Modifier.padding(5.dp),
+        onClick = {}
     )
 }
