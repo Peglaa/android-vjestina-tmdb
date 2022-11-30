@@ -20,10 +20,6 @@ class FavoritesViewModel(
 
     private fun getFavorites() {
         viewModelScope.launch {
-
-            _favoritesViewState.value = favoritesScreenMapper.toFavoritesViewState(
-                favoriteMovies = movieRepository.favoriteMovies().stateIn(this).value
-            )
             movieRepository.favoriteMovies().collect {
                 _favoritesViewState.value = favoritesScreenMapper.toFavoritesViewState(it)
             }

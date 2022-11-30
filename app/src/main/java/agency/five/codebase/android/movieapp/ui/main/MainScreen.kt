@@ -36,6 +36,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import org.koin.androidx.compose.getViewModel
+import org.koin.core.parameter.parametersOf
 
 @Composable
 fun MainScreen() {
@@ -50,7 +51,6 @@ fun MainScreen() {
     val showBackIcon = !showBottomBar
     val homeViewModel = getViewModel<HomeViewModel>()
     val favoritesViewModel = getViewModel<FavoritesViewModel>()
-    val movieDetailsViewModel = getViewModel<MovieDetailsViewModel>()
 
     BackHandler(
         enabled = navBackStackEntry?.destination?.route == MovieDetailsDestination.route,
@@ -119,8 +119,11 @@ fun MainScreen() {
                     route = MovieDetailsDestination.route,
                     arguments = listOf(navArgument(MOVIE_ID_KEY) { type = NavType.IntType }),
                 ) {
+                    val movieId = it.arguments?.getInt(MOVIE_ID_KEY)
+                    val viewModel =
+                        getViewModel<MovieDetailsViewModel>(parameters = { parametersOf(movieId) })
                     MovieDetailsRoute(
-                        viewModel = movieDetailsViewModel
+                        viewModel = viewModel
                     )
                 }
             }

@@ -5,10 +5,7 @@ import agency.five.codebase.android.movieapp.model.MovieCategory
 import agency.five.codebase.android.movieapp.ui.home.mapper.HomeScreenMapper
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 
 class HomeViewModel(
@@ -46,27 +43,45 @@ class HomeViewModel(
         _upcomingMoviesHomeViewState.asStateFlow()
 
     init {
+        getPopularMovies(homeScreenMapper)
+        getUpcomingMovies(homeScreenMapper)
+        getNowPlayingMovies(homeScreenMapper)
+    }
+
+    private fun getPopularMovies(mapper: HomeScreenMapper) {
         viewModelScope.launch {
-            _upcomingMoviesHomeViewState.value = homeScreenMapper.toHomeMovieCategoryViewState(
-                movieCategories = upcomingCategories,
-                selectedMovieCategory = MovieCategory.UPCOMING_TODAY,
-                movies = movieRepository.upcomingMovies(MovieCategory.UPCOMING_TODAY)
-                    .stateIn(this).value
-            )
+            movieRepository.popularMovies(MovieCategory.POPULAR_STREAMING).collect {
+                _popularMoviesHomeViewState.value = mapper.toHomeMovieCategoryViewState(
+                    movieCategories = popularCategories,
+                    selectedMovieCategory = MovieCategory.POPULAR_STREAMING,
+                    movies = it
+                )
+            }
+        }
+    }
 
-            _popularMoviesHomeViewState.value = homeScreenMapper.toHomeMovieCategoryViewState(
-                movieCategories = popularCategories,
-                selectedMovieCategory = MovieCategory.POPULAR_STREAMING,
-                movies = movieRepository.upcomingMovies(MovieCategory.POPULAR_STREAMING)
-                    .stateIn(this).value
-            )
+    private fun getUpcomingMovies(mapper: HomeScreenMapper) {
+        viewModelScope.launch {
+            movieRepository.upcomingMovies(MovieCategory.UPCOMING_TODAY).collect {
+                _upcomingMoviesHomeViewState.value = mapper.toHomeMovieCategoryViewState(
+                    movieCategories = upcomingCategories,
+                    selectedMovieCategory = MovieCategory.UPCOMING_TODAY,
+                    movies = it
+                )
+            }
+        }
+    }
 
-            _nowPlayingMoviesHomeViewState.value = homeScreenMapper.toHomeMovieCategoryViewState(
-                movieCategories = nowPlayingCategories,
-                selectedMovieCategory = MovieCategory.NOW_PLAYING_MOVIES,
-                movies = movieRepository.upcomingMovies(MovieCategory.NOW_PLAYING_MOVIES)
-                    .stateIn(this).value
-            )
+    private fun getNowPlayingMovies(mapper: HomeScreenMapper) {
+        viewModelScope.launch {
+            movieRepository.nowPlayingMovies(MovieCategory.NOW_PLAYING_MOVIES).collect {
+                _nowPlayingMoviesHomeViewState.value =
+                    mapper.toHomeMovieCategoryViewState(
+                        movieCategories = nowPlayingCategories,
+                        selectedMovieCategory = MovieCategory.NOW_PLAYING_MOVIES,
+                        movies = it
+                    )
+            }
         }
     }
 

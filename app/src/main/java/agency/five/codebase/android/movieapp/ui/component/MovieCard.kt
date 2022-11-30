@@ -24,10 +24,10 @@ fun MovieCard(
     modifier: Modifier,
     movieCardViewState: MovieCardViewState,
     onFavoriteButtonClicked: (Int) -> Unit,
-    onClick: () -> Unit
+    onClick: (Int) -> Unit
 ) {
     Card(
-        modifier = modifier.clickable { onClick() },
+        modifier = modifier.clickable { onClick(movieCardViewState.id) },
         shape = RoundedCornerShape(15.dp),
         elevation = 5.dp
     ) {
@@ -67,7 +67,7 @@ private fun MovieCardPreview() {
     MovieCard(
         movieCardViewState = movieCardViewState,
         modifier = movieCardModifier,
-        onClick = {  },
-        onFavoriteButtonClicked = {  }
+        onClick = { },
+        onFavoriteButtonClicked = { }
     )
 }
