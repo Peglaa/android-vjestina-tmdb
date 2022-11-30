@@ -16,6 +16,7 @@ class FavoritesMapperImpl: FavoritesMapper {
         return FavoritesMovieViewState(
             id= movie.id,
             movieCardViewState = MovieCardViewState(
+                id = movie.id,
                 imageUrl = movie.imageUrl,
                 title = movie.title,
                 isFavorite = movie.isFavorite

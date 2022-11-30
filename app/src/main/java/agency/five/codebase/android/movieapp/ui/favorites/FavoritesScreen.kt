@@ -1,33 +1,21 @@
 package agency.five.codebase.android.movieapp.ui.favorites
 
-import agency.five.codebase.android.movieapp.mock.MoviesMock
 import agency.five.codebase.android.movieapp.ui.component.MovieCard
-import agency.five.codebase.android.movieapp.ui.favorites.mapper.FavoritesMapper
-import agency.five.codebase.android.movieapp.ui.favorites.mapper.FavoritesMapperImpl
-import agency.five.codebase.android.movieapp.ui.theme.MovieAppTheme
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.*
 import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-
-private val favoritesMapper: FavoritesMapper = FavoritesMapperImpl()
-
-// multiple view states if required
-val favoritesViewState = favoritesMapper.toFavoritesViewState(MoviesMock.getMoviesList())
 
 @Composable
 fun FavoritesRoute(
+    viewModel: FavoritesViewModel,
     onNavigateToMovieDetails: (Int) -> Unit,
-
 ) {
-    val favoritesViewState by remember { mutableStateOf(favoritesViewState) }
+    val favoritesViewState: FavoritesViewState by viewModel.favoritesViewState.collectAsState()
+    println("FAV_VIEW_STATE: $favoritesViewState")
 
     FavoritesScreen(
         modifier = Modifier
@@ -35,7 +23,7 @@ fun FavoritesRoute(
             .padding(15.dp),
         favoritesViewState = favoritesViewState,
         onCardClick = onNavigateToMovieDetails,
-        onFavoriteButtonClick = {  }
+        onFavoriteButtonClick = { viewModel.toggleFavorite(it) }
     )
 }
 
@@ -54,7 +42,7 @@ private fun FavoritesScreen(
     modifier: Modifier,
     favoritesViewState: FavoritesViewState,
     onCardClick: (Int) -> Unit,
-    onFavoriteButtonClick: () -> Unit
+    onFavoriteButtonClick: (Int) -> Unit
 ) {
 
     LazyVerticalGrid(
@@ -79,7 +67,7 @@ private fun FavoritesScreen(
                         .height(180.dp),
                     movieCardViewState = card.movieCardViewState,
                     onClick = { onCardClick(card.id) },
-                    onFavoriteButtonClicked = onFavoriteButtonClick
+                    onFavoriteButtonClicked = { onFavoriteButtonClick(card.movieCardViewState.id) }
                 )
             }
         },
@@ -87,6 +75,7 @@ private fun FavoritesScreen(
     )
 }
 
+/*
 @Preview
 @Composable
 private fun FavoritesScreenPreview() {
@@ -102,4 +91,4 @@ private fun FavoritesScreenPreview() {
             onFavoriteButtonClick = {  }
         )
     }
-}
+}*/
