@@ -4,12 +4,25 @@ import agency.five.codebase.android.movieapp.ui.component.ActorCardViewState
 import agency.five.codebase.android.movieapp.ui.component.CrewItemViewState
 
 data class MovieDetailsViewState(
-    val id: Int = 1,
-    val imageUrl: String? = "",
-    val voteAverage: Float = 0.0f,
-    val title: String = "",
-    val overview: String = "",
-    val isFavorite: Boolean = false,
-    val crew: List<CrewItemViewState> = listOf(),
-    val cast: List<ActorCardViewState> = listOf(),
-)
+    val id: Int,
+    val imageUrl: String?,
+    val voteAverage: Float,
+    val title: String,
+    val overview: String,
+    val isFavorite: Boolean,
+    val crew: List<CrewItemViewState>,
+    val cast: List<ActorCardViewState>
+){
+    companion object {
+        val INITIAL_EMPTY: MovieDetailsViewState = MovieDetailsViewState(
+            id = 1,
+            imageUrl = null,
+            voteAverage = 0.0f,
+            title = "",
+            overview = "",
+            isFavorite = false,
+            crew = emptyList(),
+            cast = emptyList()
+        )
+    }
+}
