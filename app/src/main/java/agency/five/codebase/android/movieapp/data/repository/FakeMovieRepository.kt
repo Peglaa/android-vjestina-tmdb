@@ -19,10 +19,7 @@ class FakeMovieRepository(
         .mapLatest { favoriteIds ->
             fakeMovies.map {
                 movie ->
-                if(favoriteIds.contains(movie.id))
-                    movie.copy(isFavorite = true)
-                else
-                    movie.copy(isFavorite = false)
+                movie.copy(isFavorite = favoriteIds.contains(movie.id))
             }
         }
         .flowOn(ioDispatcher)
@@ -44,7 +41,7 @@ class FakeMovieRepository(
 
     override fun favoriteMovies(): Flow<List<Movie>> = movies.map {
         it.filter { fakeMovie -> fakeMovie.isFavorite }
-    }.transform { emit(it) }
+    }
 
     override suspend fun addMovieToFavorites(movieId: Int) {
         FavoritesDBMock.insert(movieId)
