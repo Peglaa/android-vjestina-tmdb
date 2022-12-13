@@ -1,11 +1,7 @@
 package agency.five.codebase.android.movieapp.ui.home
 
 import agency.five.codebase.android.movieapp.R
-import agency.five.codebase.android.movieapp.mock.MoviesMock
-import agency.five.codebase.android.movieapp.model.MovieCategory
 import agency.five.codebase.android.movieapp.ui.component.*
-import agency.five.codebase.android.movieapp.ui.home.mapper.HomeScreenMapper
-import agency.five.codebase.android.movieapp.ui.home.mapper.HomeScreenMapperImpl
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
@@ -17,93 +13,32 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
-val popularCategories = listOf(
-    MovieCategory.POPULAR_STREAMING,
-    MovieCategory.POPULAR_ON_TV,
-    MovieCategory.POPULAR_FOR_RENT,
-    MovieCategory.POPULAR_IN_THEATERS
-)
-
-val nowPlayingCategories = listOf(
-    MovieCategory.NOW_PLAYING_MOVIES,
-    MovieCategory.NOW_PLAYING_TV
-)
-
-val upcomingCategories = listOf(
-    MovieCategory.UPCOMING_TODAY,
-    MovieCategory.UPCOMING_THIS_WEEK
-)
-
-val homeScreenMapper: HomeScreenMapper = HomeScreenMapperImpl()
-
-val defaultPopularCategoryViewState = homeScreenMapper.toHomeMovieCategoryViewState(
-    movieCategories = popularCategories,
-    selectedMovieCategory = MovieCategory.POPULAR_STREAMING,
-    movies = MoviesMock.getMoviesList()
-)
-
-val defaultNowPlayingCategoryViewState = homeScreenMapper.toHomeMovieCategoryViewState(
-    movieCategories = nowPlayingCategories,
-    selectedMovieCategory = MovieCategory.NOW_PLAYING_MOVIES,
-    movies = MoviesMock.getMoviesList()
-)
-
-val defaultUpcomingCategoryViewState = homeScreenMapper.toHomeMovieCategoryViewState(
-    movieCategories = upcomingCategories,
-    selectedMovieCategory = MovieCategory.UPCOMING_TODAY,
-    movies = MoviesMock.getMoviesList()
-)
-
 @Composable
 fun HomeRoute(
+    viewModel: HomeViewModel,
     onNavigateToMovieDetails: (Int) -> Unit
 ) {
-    var popularCategoryViewState by remember { mutableStateOf(defaultPopularCategoryViewState) }
-    var nowPlayingCategoryViewState by remember { mutableStateOf(defaultNowPlayingCategoryViewState) }
-    var upcomingCategoryViewState by remember { mutableStateOf(defaultUpcomingCategoryViewState) }
+    val upcomingMoviesViewState: HomeMovieCategoryViewState by viewModel.upcomingMoviesHomeViewState.collectAsState()
+    val nowPlayingMoviesViewState: HomeMovieCategoryViewState by viewModel.nowPlayingMoviesHomeViewState.collectAsState()
+    val popularMoviesViewState: HomeMovieCategoryViewState by viewModel.popularMoviesHomeViewState.collectAsState()
 
     HomeScreen(
-        popularCategoryViewState = popularCategoryViewState,
-        nowPlayingCategoryViewState = nowPlayingCategoryViewState,
-        upcomingCategoryViewState = upcomingCategoryViewState,
+        popularCategoryViewState = popularMoviesViewState,
+        nowPlayingCategoryViewState = nowPlayingMoviesViewState,
+        upcomingCategoryViewState = upcomingMoviesViewState,
         onNavigateToMovieDetails = onNavigateToMovieDetails,
-        onFavoriteButtonClicked = {  } ,
-        onMovieCategoryClicked = { categoryId ->
-            when (categoryId) {
-                MovieCategory.POPULAR_STREAMING.ordinal,
-                MovieCategory.POPULAR_FOR_RENT.ordinal,
-                MovieCategory.POPULAR_ON_TV.ordinal,
-                MovieCategory.POPULAR_IN_THEATERS.ordinal
-                -> {
-                    popularCategoryViewState = mapToViewState(popularCategories, categoryId)
-                }
-
-                MovieCategory.NOW_PLAYING_MOVIES.ordinal,
-                MovieCategory.NOW_PLAYING_TV.ordinal
-                -> {
-                    nowPlayingCategoryViewState = mapToViewState(nowPlayingCategories, categoryId)
-                }
-
-                MovieCategory.UPCOMING_TODAY.ordinal,
-                MovieCategory.UPCOMING_THIS_WEEK.ordinal
-                -> {
-                    upcomingCategoryViewState = mapToViewState(upcomingCategories, categoryId)
-                }
-
-                else -> throw IllegalStateException()
-            }
-        }
+        onFavoriteButtonClicked = { viewModel.toggleFavorite(it) } ,
+        onMovieCategoryClicked = { categoryId -> viewModel.changeCategory(categoryId) }
     )
 }
 
 @Composable
 private fun HomeScreen(
     onNavigateToMovieDetails: (Int) -> Unit,
-    onFavoriteButtonClicked: () -> Unit,
+    onFavoriteButtonClicked: (Int) -> Unit,
     onMovieCategoryClicked: (Int) -> Unit,
     popularCategoryViewState: HomeMovieCategoryViewState,
     nowPlayingCategoryViewState: HomeMovieCategoryViewState,
@@ -153,7 +88,7 @@ private fun MovieCategoryLayout(
     categoryViewState: HomeMovieCategoryViewState,
     title: Int,
     onNavigateToMovieDetails: (Int) -> Unit,
-    onFavoriteButtonClicked: () -> Unit,
+    onFavoriteButtonClicked: (Int) -> Unit,
     onCategoryClicked: (Int) -> Unit
 ) {
     Text(
@@ -202,11 +137,12 @@ private fun MovieCategoryLayout(
                         .width(120.dp)
                         .height(180.dp),
                     movieCardViewState = MovieCardViewState(
+                        id = movie.id,
                         imageUrl = movie.imageUrl,
                         title = movie.title,
                         isFavorite = movie.isFavorite
                     ),
-                    onFavoriteButtonClicked = { onFavoriteButtonClicked() },
+                    onFavoriteButtonClicked = { onFavoriteButtonClicked(movie.id) },
                     onClick = { onNavigateToMovieDetails(movie.id) }
                 )
             }
@@ -214,6 +150,7 @@ private fun MovieCategoryLayout(
     )
 }
 
+/*
 private fun mapToViewState(
     categoryList: List<MovieCategory>,
     categoryId: Int
@@ -223,19 +160,4 @@ private fun mapToViewState(
         selectedMovieCategory = MovieCategory.values()[categoryId],
         movies = MoviesMock.getMoviesList()
     )
-}
-
-@Preview
-@Composable
-private fun HomeScreenPreview() {
-    HomeScreen(
-        onFavoriteButtonClicked = {  },
-        onNavigateToMovieDetails = {  },
-        onMovieCategoryClicked = {  },
-        nowPlayingCategoryViewState = defaultNowPlayingCategoryViewState,
-        upcomingCategoryViewState = defaultUpcomingCategoryViewState,
-        popularCategoryViewState = defaultPopularCategoryViewState
-    )
-}
-
-
+}*/

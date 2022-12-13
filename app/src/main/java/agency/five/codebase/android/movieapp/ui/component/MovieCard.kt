@@ -12,15 +12,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 
-fun onMovieCardClick() {
-    //
-}
-
-fun onFavoriteButtonClicked() {
-    //
-}
-
 data class MovieCardViewState(
+    val id: Int,
     val imageUrl: String?,
     val title: String,
     val isFavorite: Boolean
@@ -30,11 +23,11 @@ data class MovieCardViewState(
 fun MovieCard(
     modifier: Modifier,
     movieCardViewState: MovieCardViewState,
-    onFavoriteButtonClicked: () -> Unit,
-    onClick: () -> Unit
+    onFavoriteButtonClicked: (Int) -> Unit,
+    onClick: (Int) -> Unit
 ) {
     Card(
-        modifier = modifier.clickable { onClick() },
+        modifier = modifier.clickable { onClick(movieCardViewState.id) },
         shape = RoundedCornerShape(15.dp),
         elevation = 5.dp
     ) {
@@ -49,7 +42,8 @@ fun MovieCard(
                     .padding(10.dp)
                     .size(28.dp),
                 isFavorite = movieCardViewState.isFavorite,
-                onClick = { onFavoriteButtonClicked() })
+                onClick = { onFavoriteButtonClicked(movieCardViewState.id) }
+            )
         }
     }
 }
@@ -59,9 +53,10 @@ fun MovieCard(
 private fun MovieCardPreview() {
     val movie = MoviesMock.getMoviesList()[0]
     val movieCardViewState = MovieCardViewState(
+        id = movie.id,
         imageUrl = movie.imageUrl,
         title = movie.title,
-        isFavorite = movie.isFavorite
+        isFavorite = movie.isFavorite,
     )
 
     val movieCardModifier = Modifier
@@ -72,7 +67,7 @@ private fun MovieCardPreview() {
     MovieCard(
         movieCardViewState = movieCardViewState,
         modifier = movieCardModifier,
-        onClick = { onMovieCardClick() },
-        onFavoriteButtonClicked = { onFavoriteButtonClicked() }
+        onClick = { },
+        onFavoriteButtonClicked = { }
     )
 }

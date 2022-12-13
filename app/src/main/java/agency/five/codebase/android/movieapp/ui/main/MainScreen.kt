@@ -5,8 +5,10 @@ import agency.five.codebase.android.movieapp.navigation.MOVIE_ID_KEY
 import agency.five.codebase.android.movieapp.navigation.MovieDetailsDestination
 import agency.five.codebase.android.movieapp.navigation.NavigationItem
 import agency.five.codebase.android.movieapp.ui.favorites.FavoritesRoute
+import agency.five.codebase.android.movieapp.ui.favorites.FavoritesViewModel
 import agency.five.codebase.android.movieapp.ui.home.*
 import agency.five.codebase.android.movieapp.ui.moviedetails.MovieDetailsRoute
+import agency.five.codebase.android.movieapp.ui.moviedetails.MovieDetailsViewModel
 import agency.five.codebase.android.movieapp.ui.theme.Blue
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.Image
@@ -33,6 +35,8 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import org.koin.androidx.compose.getViewModel
+import org.koin.core.parameter.parametersOf
 
 @Composable
 fun MainScreen() {
@@ -45,6 +49,8 @@ fun MainScreen() {
         }
     }
     val showBackIcon = !showBottomBar
+    val homeViewModel = getViewModel<HomeViewModel>()
+    val favoritesViewModel = getViewModel<FavoritesViewModel>()
 
     BackHandler(
         enabled = navBackStackEntry?.destination?.route == MovieDetailsDestination.route,
@@ -95,7 +101,8 @@ fun MainScreen() {
                             navController.navigate(
                                 MovieDetailsDestination.createNavigationRoute(it)
                             )
-                        }
+                        },
+                        viewModel = homeViewModel
                     )
                 }
                 composable(NavigationItem.FavoritesDestination.route) {
@@ -104,14 +111,20 @@ fun MainScreen() {
                             navController.navigate(
                                 MovieDetailsDestination.createNavigationRoute(it)
                             )
-                        }
+                        },
+                        viewModel = favoritesViewModel
                     )
                 }
                 composable(
                     route = MovieDetailsDestination.route,
                     arguments = listOf(navArgument(MOVIE_ID_KEY) { type = NavType.IntType }),
                 ) {
-                    MovieDetailsRoute()
+                    val movieId = it.arguments?.getInt(MOVIE_ID_KEY) ?: throw IllegalStateException("Passed movieId is null!")
+                    val viewModel =
+                        getViewModel<MovieDetailsViewModel>(parameters = { parametersOf(movieId) })
+                    MovieDetailsRoute(
+                        viewModel = viewModel
+                    )
                 }
             }
         }

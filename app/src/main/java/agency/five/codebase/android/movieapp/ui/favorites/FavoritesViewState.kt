@@ -9,4 +9,10 @@ data class FavoritesMovieViewState(
 
 data class FavoritesViewState(
     val favoriteMoviesViewStates: List<FavoritesMovieViewState>
-)
+){
+    companion object{
+        val INITIAL_EMPTY: FavoritesViewState = FavoritesViewState(
+            favoriteMoviesViewStates = emptyList()
+        )
+    }
+}
