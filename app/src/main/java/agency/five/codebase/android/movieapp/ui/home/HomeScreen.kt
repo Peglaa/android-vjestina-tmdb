@@ -31,31 +31,7 @@ fun HomeRoute(
         upcomingCategoryViewState = upcomingMoviesViewState,
         onNavigateToMovieDetails = onNavigateToMovieDetails,
         onFavoriteButtonClicked = { viewModel.toggleFavorite(it) } ,
-        onMovieCategoryClicked = { /*categoryId ->
-            when (categoryId) {
-                MovieCategory.POPULAR_STREAMING.ordinal,
-                MovieCategory.POPULAR_FOR_RENT.ordinal,
-                MovieCategory.POPULAR_ON_TV.ordinal,
-                MovieCategory.POPULAR_IN_THEATERS.ordinal
-                -> {
-                    popularCategoryViewState = mapToViewState(popularCategories, categoryId)
-                }
-
-                MovieCategory.NOW_PLAYING_MOVIES.ordinal,
-                MovieCategory.NOW_PLAYING_TV.ordinal
-                -> {
-                    nowPlayingCategoryViewState = mapToViewState(nowPlayingCategories, categoryId)
-                }
-
-                MovieCategory.UPCOMING_TODAY.ordinal,
-                MovieCategory.UPCOMING_THIS_WEEK.ordinal
-                -> {
-                    upcomingCategoryViewState = mapToViewState(upcomingCategories, categoryId)
-                }
-
-                else -> throw IllegalStateException()
-            }*/
-        }
+        onMovieCategoryClicked = { categoryId -> viewModel.changeCategory(categoryId) }
     )
 }
 
@@ -185,19 +161,3 @@ private fun mapToViewState(
         movies = MoviesMock.getMoviesList()
     )
 }*/
-
-/*
-@Preview
-@Composable
-private fun HomeScreenPreview() {
-    HomeScreen(
-        onFavoriteButtonClicked = {  },
-        onNavigateToMovieDetails = {  },
-        onMovieCategoryClicked = {  },
-        nowPlayingCategoryViewState = defaultNowPlayingCategoryViewState,
-        upcomingCategoryViewState = defaultUpcomingCategoryViewState,
-        popularCategoryViewState = defaultPopularCategoryViewState
-    )
-}*/
-
-

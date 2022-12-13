@@ -10,19 +10,16 @@ import kotlinx.coroutines.launch
 class MovieDetailsViewModel(
     private val movieRepository: MovieRepository,
     private val movieDetailsScreenMapper: MovieDetailsMapper,
-    private val movieId: Int
+    movieId: Int
 ) : ViewModel() {
-    private val _movieDetailsViewState = MutableStateFlow(MovieDetailsViewState())
     val movieDetailsViewState: StateFlow<MovieDetailsViewState> =
-        _movieDetailsViewState.asStateFlow()
-
-    init {
-        viewModelScope.launch {
-            movieRepository.movieDetails(movieId).collect {
-                _movieDetailsViewState.value = movieDetailsScreenMapper.toMovieDetailsViewState(it)
-            }
-        }
-    }
+        movieRepository.movieDetails(movieId)
+            .map(movieDetailsScreenMapper::toMovieDetailsViewState)
+            .stateIn(
+                scope = viewModelScope,
+                started = SharingStarted.WhileSubscribed(5_000),
+                initialValue = MovieDetailsViewState.INITIAL_EMPTY,
+            )
 
     fun toggleFavorite(movieId: Int) {
         viewModelScope.launch {

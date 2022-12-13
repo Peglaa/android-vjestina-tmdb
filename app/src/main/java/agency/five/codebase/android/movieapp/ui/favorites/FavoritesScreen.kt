@@ -1,12 +1,14 @@
 package agency.five.codebase.android.movieapp.ui.favorites
 
 import agency.five.codebase.android.movieapp.ui.component.MovieCard
+import agency.five.codebase.android.movieapp.ui.theme.MovieAppTheme
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.*
 import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 
 @Composable
@@ -15,7 +17,6 @@ fun FavoritesRoute(
     onNavigateToMovieDetails: (Int) -> Unit,
 ) {
     val favoritesViewState: FavoritesViewState by viewModel.favoritesViewState.collectAsState()
-    println("FAV_VIEW_STATE: $favoritesViewState")
 
     FavoritesScreen(
         modifier = Modifier
@@ -75,7 +76,7 @@ private fun FavoritesScreen(
     )
 }
 
-/*
+
 @Preview
 @Composable
 private fun FavoritesScreenPreview() {
@@ -86,9 +87,9 @@ private fun FavoritesScreenPreview() {
     MovieAppTheme {
         FavoritesScreen(
             modifier = favoritesScreenModifier,
-            favoritesViewState = favoritesViewState,
+            favoritesViewState = FavoritesViewState.INITIAL_EMPTY,
             onCardClick = {  },
             onFavoriteButtonClick = {  }
         )
     }
-}*/
+}

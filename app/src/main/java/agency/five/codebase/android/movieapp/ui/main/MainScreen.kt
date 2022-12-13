@@ -119,7 +119,7 @@ fun MainScreen() {
                     route = MovieDetailsDestination.route,
                     arguments = listOf(navArgument(MOVIE_ID_KEY) { type = NavType.IntType }),
                 ) {
-                    val movieId = it.arguments?.getInt(MOVIE_ID_KEY)
+                    val movieId = it.arguments?.getInt(MOVIE_ID_KEY) ?: throw IllegalStateException("Passed movieId is null!")
                     val viewModel =
                         getViewModel<MovieDetailsViewModel>(parameters = { parametersOf(movieId) })
                     MovieDetailsRoute(
